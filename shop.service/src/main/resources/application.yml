@@ -1,5 +1,7 @@
 server:
   port: 3030
+  servlet:
+    contextPath: /api/shop-service
 
 spring:
   datasource:
@@ -11,3 +13,8 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    enable: true
