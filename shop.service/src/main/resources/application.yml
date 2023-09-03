@@ -1,0 +1,13 @@
+server:
+  port: 3030
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5430/shop_service_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
