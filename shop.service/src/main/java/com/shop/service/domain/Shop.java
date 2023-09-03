@@ -56,7 +56,7 @@ public class Shop {
 
     @ManyToMany
     @Column(name = "weekDays")
-    private List<WeekDays> weekDays;
+    private List<WeekDay> weekDays;
 
     @Column(name = "isEnable")
     private Boolean isEnable;

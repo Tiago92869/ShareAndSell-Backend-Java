@@ -16,8 +16,8 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "weekDays")
-public class WeekDays {
+@Entity(name = "week_day")
+public class WeekDay {
 
     @Id
     @GeneratedValue(generator = "UUID")
