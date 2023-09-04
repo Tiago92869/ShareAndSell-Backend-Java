@@ -1,6 +1,8 @@
 package com.shop.service.services;
 
+import com.shop.service.domain.Product;
 import com.shop.service.dto.ProductDto;
+import com.shop.service.exceptions.EntityNotFoundException;
 import com.shop.service.maps.ProductMapper;
 import com.shop.service.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -26,7 +29,15 @@ public class ProductService {
     }
 
     public ProductDto getProductById(UUID id) {
-        return null;
+
+        Optional<Product> maybeOptional = this.productRepository.findById(id);
+
+        if(maybeOptional.isEmpty()){
+
+            throw new EntityNotFoundException("A Product with that id does not exist");
+        }
+
+        return ProductMapper.INSTANCE.productToDto(maybeOptional.get());
     }
 
     public ProductDto createProduct(ProductDto productDto) {
@@ -39,5 +50,14 @@ public class ProductService {
 
 
     public void deleteProductById(UUID id) {
+
+        Optional<Product> maybeOptional = this.productRepository.findById(id);
+
+        if(maybeOptional.isEmpty()){
+
+            throw new EntityNotFoundException("A Product with that id does not exist");
+        }
+
+        this.productRepository.delete(maybeOptional.get());
     }
 }
