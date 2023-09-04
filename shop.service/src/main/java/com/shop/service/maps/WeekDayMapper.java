@@ -8,7 +8,7 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 public interface WeekDayMapper {
 
-    WeekDayMapper INSTANCE = Mappers.getMapper( WeekDayMapper.class);
+    WeekDayMapper INSTANCE = Mappers.getMapper(WeekDayMapper.class);
 
     WeekDayDto weekDaysToDto(WeekDay weekDay);
 
