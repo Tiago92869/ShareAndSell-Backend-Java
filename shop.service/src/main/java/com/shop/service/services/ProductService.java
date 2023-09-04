@@ -41,11 +41,26 @@ public class ProductService {
     }
 
     public ProductDto createProduct(ProductDto productDto) {
-        return null;
+
+        productDto.setId(UUID.randomUUID());
+
+        Product product = this.productRepository.save(ProductMapper.INSTANCE.dtoToProduct(productDto));
+
+        return ProductMapper.INSTANCE.productToDto(product);
     }
 
     public ProductDto updateProduct(UUID id, ProductDto productDto) {
-        return null;
+
+        Optional<Product> maybeOptional = this.productRepository.findById(id);
+
+        if(maybeOptional.isEmpty()){
+
+            throw new EntityNotFoundException("A Product with that id does not exist");
+        }
+
+        Product product = this.productRepository.save(ProductMapper.INSTANCE.dtoToProduct(productDto));
+
+        return ProductMapper.INSTANCE.productToDto(product);
     }
 
 
