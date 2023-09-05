@@ -17,6 +17,4 @@ public class ProductDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
     private String description;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String photo;
 }

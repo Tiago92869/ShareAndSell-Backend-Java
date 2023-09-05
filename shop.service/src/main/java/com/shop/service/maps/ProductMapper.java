@@ -15,12 +15,4 @@ public interface ProductMapper {
     ProductDto productToDto(Product product);
 
     Product dtoToProduct(ProductDto productDto);
-
-    default byte[] toBytes(String string){
-        return string != null ? string.getBytes() : null;
-    }
-
-    default String toString(byte[] bytes){
-        return bytes != null ? Arrays.toString(bytes) : null;
-    }
 }
