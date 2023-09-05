@@ -30,7 +30,7 @@ public class Product {
     private String description;
 
     @Column(name = "photo")
-    private Byte photo;
+    private byte[] photo;
 
     @OneToMany(mappedBy = "product")
     private List<ShopProduct> shopProducts;

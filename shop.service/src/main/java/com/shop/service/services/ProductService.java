@@ -58,7 +58,12 @@ public class ProductService {
             throw new EntityNotFoundException("A Product with that id does not exist");
         }
 
-        Product product = this.productRepository.save(ProductMapper.INSTANCE.dtoToProduct(productDto));
+        if(productDto.getDescription() != null){
+
+            maybeOptional.get().setDescription(productDto.getDescription());
+        }
+
+        Product product = this.productRepository.save(maybeOptional.get());
 
         return ProductMapper.INSTANCE.productToDto(product);
     }

@@ -1,5 +1,6 @@
 package com.shop.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ProductDto {
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
     private String description;
-    private Byte photo;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String photo;
 }
