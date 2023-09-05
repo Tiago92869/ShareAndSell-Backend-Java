@@ -32,6 +32,12 @@ public class Product {
     @Column(name = "photo")
     private byte[] photo;
 
+    @Column(name = "type")
+    private String type;
+
+    @Column(name = "name")
+    private String name;
+
     @OneToMany(mappedBy = "product")
     private List<ShopProduct> shopProducts;
 }
