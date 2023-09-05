@@ -1,25 +1,23 @@
 package com.shop.service.services;
 
-import com.google.common.io.ByteStreams;
 import com.shop.service.domain.Product;
 import com.shop.service.dto.ProductDto;
 import com.shop.service.exceptions.BadRequestException;
 import com.shop.service.exceptions.EntityNotFoundException;
+import com.shop.service.exceptions.ValidationException;
 import com.shop.service.maps.ProductMapper;
 import com.shop.service.repositories.ProductRepository;
 import com.shop.service.utils.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.InputStream;
-import java.util.Base64;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -112,6 +110,17 @@ public class ProductService {
 
         try{
             Product product = maybeOptional.get();
+
+            //check for content type of image
+            if(file != null) {
+
+               if(!Objects.equals(file.getContentType(), "image/png")
+                       && !Objects.equals(file.getContentType(), "image/jpeg")){
+
+                   throw new ValidationException("The image must be of type .png, .jpeg or .jpg");
+               }
+            }
+
             product.setType(file.getContentType());
             product.setName(file.getOriginalFilename());
             product.setPhoto(ImageUtil.compressImage(file.getBytes()));
