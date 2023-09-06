@@ -20,8 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @SpringBootTest
 public class ProductServiceTest {
@@ -84,13 +83,38 @@ public class ProductServiceTest {
         //Then
         assertNotNull(result);
         assertEquals(result.getDescription(), product.getDescription());
-
     }
 
     @Test
-    public void testUpdateProduct(){}
+    public void testUpdateProduct(){
+        //Given
+        ProductDto productDto = new ProductDto(UUID.fromString("0f3bb882-ec99-41d0-a0a2-c91508f455bb"), "orange");
+
+        Mockito.when(productRepository.findById(product.getId())).thenReturn(Optional.ofNullable(product));
+
+        Mockito.when(productRepository.save(Mockito.any(Product.class))).thenReturn(product);
+
+        //When
+        ProductDto result = productService.updateProduct(product.getId(), productDto);
+
+        //Then
+        assertNotNull(result);
+        assertEquals(result.getDescription(), product.getDescription(), productDto.getDescription());
+    }
 
     @Test
-    public void testDeleteProduct(){}
+    public void testDeleteProduct(){
+
+        //Given
+        UUID productId = UUID.fromString("0f3bb882-ec99-41d0-a0a2-c91508f455bb");
+        Mockito.when(productRepository.findById(product.getId())).thenReturn(Optional.ofNullable(product));
+        Mockito.doNothing().when(productRepository).deleteById(productId);
+
+        //When
+        productService.deleteProductById(productId);
+
+        //Then
+        Mockito.verify(productRepository, Mockito.times(1)).deleteById(productId);
+    }
 
 }
