@@ -1,4 +1,159 @@
 package com.shop.service;
 
+import com.shop.service.controllers.ProductController;
+import com.shop.service.domain.Product;
+import com.shop.service.dto.ProductDto;
+import com.shop.service.dto.WeekDayDto;
+import com.shop.service.maps.ProductMapper;
+import com.shop.service.maps.WeekDayMapper;
+import com.shop.service.services.ProductService;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(value = ProductController.class)
+@WithMockUser
 public class ProductControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private ProductService productService;
+
+    Product product = new Product(UUID.fromString("0f3bb882-ec99-41d0-a0a2-c91508f455bb"), "apple", null, "image/png", "apple.png", null);
+
+    ProductDto productDto = new ProductDto(UUID.fromString("0f3bb882-ec99-41d0-a0a2-c91508f455bb"), "apple");
+
+    String exampleProductJson = "{\"id\": \"0f3bb882-ec99-41d0-a0a2-c91508f455bb\", \"description\": \"apple\"}";
+
+    @Test
+    public void testProductToDto(){
+
+        ProductDto Dto = ProductMapper.INSTANCE.productToDto(product);
+
+        assertNotNull(Dto);
+        assertEquals(product.getDescription(), Dto.getDescription());
+    }
+
+    @Test
+    public void testDtoToProduct(){
+
+        Product pro = ProductMapper.INSTANCE.dtoToProduct(productDto);
+
+        assertNotNull(pro);
+        assertEquals(productDto.getDescription(), pro.getDescription());
+    }
+
+    @Test
+    public void testGetAllProducts() throws Exception {
+        //Given
+        PageRequest pageRequest = PageRequest.of(0, 1);
+        List<ProductDto> productList = new ArrayList<>();
+        productList.add(productDto);
+        Page<ProductDto> productPage = new PageImpl<>(productList, pageRequest, productList.size());
+
+        Mockito.when(productService.getAllProducts(pageRequest)).thenReturn(productPage);
+
+        //When
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/product/?page=0&size=1").accept(MediaType.APPLICATION_JSON);
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+        //Then
+        MockMvcResultMatchers.status().isOk().match(result);
+
+        // Assert content field only
+        mockMvc.perform(requestBuilder)
+                .andExpect(jsonPath("$.content[0].id").value(String.valueOf(product.getId())))
+                .andExpect(jsonPath("$.content[0].description").value(product.getDescription()));
+    }
+
+    @Test
+    public void testGetProductById() throws Exception {
+        //Given
+        Mockito.when(productService.getProductById(product.getId())).thenReturn(productDto);
+
+        //When
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/product/" + product.getId()).accept(MediaType.APPLICATION_JSON);
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+        //Then
+        MockMvcResultMatchers.status().isOk().match(result);
+
+        // Assert content field only
+        mockMvc.perform(requestBuilder)
+                .andExpect(jsonPath("id").value(String.valueOf(product.getId())))
+                .andExpect(jsonPath("description").value(product.getDescription()));
+    }
+
+    @Test
+    public void testPostProduct(){
+        //Given
+
+
+        //When
+
+
+        //Then
+
+
+        // Assert content field only
+
+
+    }
+
+    @Test
+    public void testUpdateProduct(){
+        //Given
+
+
+        //When
+
+
+        //Then
+
+
+        // Assert content field only
+
+
+    }
+
+    @Test
+    public void testDeleteProduct(){
+        //Given
+
+
+        //When
+
+
+        //Then
+
+
+        // Assert content field only
+
+
+    }
 }
