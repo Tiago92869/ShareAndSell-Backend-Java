@@ -141,6 +141,6 @@ public class ProductService {
             throw new EntityNotFoundException("A Product with that id does not exist");
         }
 
-        this.productRepository.delete(maybeOptional.get());
+        this.productRepository.deleteById(id);
     }
 }
