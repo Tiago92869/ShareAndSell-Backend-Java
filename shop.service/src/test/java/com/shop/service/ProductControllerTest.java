@@ -31,6 +31,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.http.RequestEntity.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @ExtendWith(SpringExtension.class)
@@ -49,6 +50,9 @@ public class ProductControllerTest {
     ProductDto productDto = new ProductDto(UUID.fromString("0f3bb882-ec99-41d0-a0a2-c91508f455bb"), "apple");
 
     String exampleProductJson = "{\"id\": \"0f3bb882-ec99-41d0-a0a2-c91508f455bb\", \"description\": \"apple\"}";
+
+    String createProductJson = "{\"description\": \"apple\"}";
+    String updateProductJson = "{\"description\": \"orange\"}";
 
     @Test
     public void testProductToDto(){
@@ -79,7 +83,9 @@ public class ProductControllerTest {
         Mockito.when(productService.getAllProducts(pageRequest)).thenReturn(productPage);
 
         //When
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/product/?page=0&size=1").accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/product/?page=0&size=1")
+                .accept(MediaType.APPLICATION_JSON);
+
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         //Then
@@ -97,7 +103,9 @@ public class ProductControllerTest {
         Mockito.when(productService.getProductById(product.getId())).thenReturn(productDto);
 
         //When
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/product/" + product.getId()).accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/product/" + product.getId())
+                .accept(MediaType.APPLICATION_JSON);
+
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         //Then
@@ -110,50 +118,54 @@ public class ProductControllerTest {
     }
 
     @Test
-    public void testPostProduct(){
-        //Given
+    @WithMockUser
+    public void testPostProduct() throws Exception {
+        // Given
+        Mockito.when(productService.createProduct(productDto)).thenReturn(productDto);
 
+        // When
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/product/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(createProductJson);
 
-        //When
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
+        // Then
+        MockMvcResultMatchers.status().isOk().match(result);
 
-        //Then
-
-
-        // Assert content field only
-
-
+        // Assert content field only within the same mockMvc.perform
+        mockMvc.perform(requestBuilder)
+                .andExpect(jsonPath("id").value(String.valueOf(product.getId())))
+                .andExpect(jsonPath("description").value(product.getDescription()));
     }
 
     @Test
-    public void testUpdateProduct(){
-        //Given
+    public void testUpdateProduct() throws Exception {
+        // Given
+        Mockito.when(productService.updateProduct(productDto.getId(), productDto)).thenReturn(productDto);
 
+        // When
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/product/" + product.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(updateProductJson);
 
-        //When
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
+        // Then
+        MockMvcResultMatchers.status().isOk().match(result);
 
-        //Then
-
-
-        // Assert content field only
-
-
+        // Assert content field only within the same mockMvc.perform
+        mockMvc.perform(requestBuilder)
+                .andExpect(jsonPath("id").value(String.valueOf(productDto.getId())))
+                .andExpect(jsonPath("description").value("orange"));
     }
 
     @Test
     public void testDeleteProduct(){
-        //Given
-
-
         //When
-
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/product/" + product.getId());
 
         //Then
-
-
-        // Assert content field only
-
-
+        Mockito.verify(productService, Mockito.times(1)).deleteProductById(product.getId());
     }
 }
