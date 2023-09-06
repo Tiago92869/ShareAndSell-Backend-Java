@@ -1,21 +1,15 @@
 package com.shop.service;
 
-import com.shop.service.domain.WeekDay;
-import com.shop.service.dto.WeekDayDto;
-import com.shop.service.maps.WeekDayMapper;
-import com.shop.service.repositories.WeekDayRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
 
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ApplicationTests {
+class ApplicationTest {
 
 	@LocalServerPort
 	private int port;
