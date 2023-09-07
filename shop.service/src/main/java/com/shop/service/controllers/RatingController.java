@@ -1,6 +1,5 @@
 package com.shop.service.controllers;
 
-import com.shop.service.dto.AppointmentDto;
 import com.shop.service.dto.RatingDto;
 import com.shop.service.services.RatingService;
 import io.swagger.v3.oas.annotations.Operation;
