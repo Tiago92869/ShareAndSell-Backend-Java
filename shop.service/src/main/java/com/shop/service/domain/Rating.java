@@ -35,6 +35,9 @@ public class Rating {
     @Column(name = "createdDate")
     private LocalDate date;
 
+    @Column(name = "userId")
+    private UUID userId;
+
     @ManyToOne
     @JoinColumn(name = "shop_id")
     private Shop shop;
