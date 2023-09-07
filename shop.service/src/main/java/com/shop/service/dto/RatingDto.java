@@ -1,5 +1,6 @@
 package com.shop.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @Setter
 public class RatingDto {
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
 
     private Float rate;

@@ -28,7 +28,7 @@ public class RatingController {
     @GetMapping(value = "/")
     @Operation(summary = "Get all Ratings")
     @ResponseStatus(HttpStatus.OK)
-    public Page<AppointmentDto> getAllRatings(Pageable pageable){
+    public Page<RatingDto> getAllRatings(Pageable pageable){
 
         return this.ratingService.getAllRatings(pageable);
     }
@@ -36,7 +36,7 @@ public class RatingController {
     @GetMapping(value = "/{id}")
     @Operation(summary = "Get Rating by id")
     @ResponseStatus(HttpStatus.OK)
-    public AppointmentDto getRatingById(@PathVariable UUID id){
+    public RatingDto getRatingById(@PathVariable UUID id){
 
         return this.ratingService.getRatingById(id);
     }
@@ -44,7 +44,7 @@ public class RatingController {
     @PostMapping(value = "/")
     @Operation(summary = "Create Rating")
     @ResponseStatus(HttpStatus.OK)
-    public AppointmentDto createRatting(@RequestBody RatingDto ratingDto){
+    public RatingDto createRatting(@RequestBody RatingDto ratingDto){
 
         return this.ratingService.createRatting(ratingDto);
     }
@@ -52,7 +52,7 @@ public class RatingController {
     @PatchMapping(value = "/{id}")
     @Operation(summary = "Update Rating by id")
     @ResponseStatus(HttpStatus.OK)
-    public AppointmentDto updateRating(@PathVariable UUID id, @RequestBody RatingDto ratingDto){
+    public RatingDto updateRating(@PathVariable UUID id, @RequestBody RatingDto ratingDto){
 
         return this.ratingService.updateRating(id, ratingDto);
     }
