@@ -33,6 +33,9 @@ public class Appointment {
     @Column(name = "date")
     private LocalDate date;
 
+    @Column(name = "userId")
+    private UUID userId;
+
     @ManyToOne
     @JoinColumn(name = "shop_id")
     private Shop shop;
