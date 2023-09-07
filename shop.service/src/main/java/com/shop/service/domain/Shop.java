@@ -54,12 +54,12 @@ public class Shop {
     @Column(name = "endTime")
     private LocalTime endTime;
 
+    @Column(name = "isEnable")
+    private Boolean isEnable;
+
     @ManyToMany
     @Column(name = "weekDays")
     private List<WeekDay> weekDays;
-
-    @Column(name = "isEnable")
-    private Boolean isEnable;
 
     @OneToMany(mappedBy = "shop")
     private List<Appointment> appointments;
