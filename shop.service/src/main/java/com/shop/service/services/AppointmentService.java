@@ -1,12 +1,17 @@
 package com.shop.service.services;
 
+import com.shop.service.domain.Appointment;
+import com.shop.service.domain.Product;
 import com.shop.service.dto.AppointmentDto;
+import com.shop.service.exceptions.EntityNotFoundException;
+import com.shop.service.maps.AppointmentMapper;
 import com.shop.service.repositories.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -21,26 +26,61 @@ public class AppointmentService {
 
     public Page<AppointmentDto> getAllAppointments(Pageable pageable) {
 
-        return null;
+        return this.appointmentRepository.findAll(pageable).map(AppointmentMapper.INSTANCE::appointmentToDto);
     }
 
     public AppointmentDto getAppointmentById(UUID id) {
 
-        return null;
+        Optional<Appointment> maybeAppointment = this.appointmentRepository.findById(id);
+
+        if(maybeAppointment.isEmpty()){
+            throw new EntityNotFoundException("A Appointment with that id does not exist");
+        }
+
+        return AppointmentMapper.INSTANCE.appointmentToDto(maybeAppointment.get());
     }
 
     public AppointmentDto createAppointment(AppointmentDto appointmentDto) {
 
-        return null;
+        appointmentDto.setId(UUID.randomUUID());
+
+        return AppointmentMapper.INSTANCE.appointmentToDto(
+                this.appointmentRepository.save(AppointmentMapper.INSTANCE.dtoToAppointment(appointmentDto)));
     }
 
     public AppointmentDto updateAppointment(UUID id, AppointmentDto appointmentDto) {
 
-        return null;
+        Optional<Appointment> maybeAppointment = this.appointmentRepository.findById(id);
+
+        if(maybeAppointment.isEmpty()){
+            throw new EntityNotFoundException("A Appointment with that id does not exist");
+        }
+
+        Appointment appointment = maybeAppointment.get();
+
+        if(appointmentDto.getDate() != null){
+            appointment.setDate(appointmentDto.getDate());
+        }
+
+        if(appointmentDto.getTime() != null){
+            appointment.setTime(appointmentDto.getTime());
+        }
+
+        if(appointmentDto.getUserId() != null){
+            appointment.setUserId(appointmentDto.getUserId());
+        }
+
+        return AppointmentMapper.INSTANCE.appointmentToDto(this.appointmentRepository.save(appointment));
     }
 
     public void deleteAppointment(UUID id) {
 
+        Optional<Appointment> maybeAppointment = this.appointmentRepository.findById(id);
 
+        if(maybeAppointment.isEmpty()){
+            throw new EntityNotFoundException("A Appointment with that id does not exist");
+        }
+
+        this.appointmentRepository.deleteById(id);
     }
 }
