@@ -1,10 +1,11 @@
 package com.shop.service.services;
 import com.shop.service.domain.Rating;
-import com.shop.service.dto.AppointmentDto;
+import com.shop.service.domain.Shop;
 import com.shop.service.dto.RatingDto;
 import com.shop.service.exceptions.EntityNotFoundException;
 import com.shop.service.maps.RatingMapper;
 import com.shop.service.repositories.RatingRepository;
+import com.shop.service.repositories.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,9 +19,12 @@ public class RatingService {
 
     private final RatingRepository ratingRepository;
 
+    private final ShopRepository shopRepository;
+
     @Autowired
-    public RatingService(RatingRepository ratingRepository) {
+    public RatingService(RatingRepository ratingRepository, ShopRepository shopRepository) {
         this.ratingRepository = ratingRepository;
+        this.shopRepository = shopRepository;
     }
 
     public Page<RatingDto> getAllRatings(Pageable pageable) {
@@ -43,8 +47,16 @@ public class RatingService {
 
         ratingDto.setId(UUID.randomUUID());
 
-        return RatingMapper.INSTANCE.ratingToDto(
-                this.ratingRepository.save(RatingMapper.INSTANCE.dtoToRating(ratingDto)));
+        Optional<Shop> optionalShop = this.shopRepository.findById(ratingDto.getShopId());
+
+        if(optionalShop.isEmpty()){
+            throw new EntityNotFoundException("A Shop with that id does not exist");
+        }
+
+        Rating rating = RatingMapper.INSTANCE.dtoToRating(ratingDto);
+        rating.setShop(optionalShop.get());
+
+        return RatingMapper.INSTANCE.ratingToDto(this.ratingRepository.save(rating));
     }
 
     public RatingDto updateRating(UUID id, RatingDto ratingDto) {
@@ -71,6 +83,17 @@ public class RatingService {
 
         if(ratingDto.getUserId() != null){
             rating.setUserId(ratingDto.getUserId());
+        }
+
+        if(ratingDto.getShopId() != null){
+
+            Optional<Shop> optionalShop = this.shopRepository.findById(ratingDto.getShopId());
+
+            if(optionalShop.isEmpty()){
+                throw new EntityNotFoundException("A Shop with that id does not exist");
+            }
+
+            rating.setShop(optionalShop.get());
         }
 
         return RatingMapper.INSTANCE.ratingToDto(this.ratingRepository.save(rating));

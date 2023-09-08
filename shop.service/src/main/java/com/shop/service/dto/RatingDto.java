@@ -25,4 +25,6 @@ public class RatingDto {
     private LocalDate date;
 
     private UUID userId;
+
+    private UUID shopId;
 }
