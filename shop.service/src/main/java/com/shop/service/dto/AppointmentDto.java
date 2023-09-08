@@ -25,4 +25,5 @@ public class AppointmentDto {
 
     private UUID userId;
 
+    private UUID shopId;
 }

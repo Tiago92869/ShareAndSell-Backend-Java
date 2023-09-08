@@ -1,11 +1,12 @@
 package com.shop.service.services;
 
 import com.shop.service.domain.Appointment;
-import com.shop.service.domain.Product;
+import com.shop.service.domain.Shop;
 import com.shop.service.dto.AppointmentDto;
 import com.shop.service.exceptions.EntityNotFoundException;
 import com.shop.service.maps.AppointmentMapper;
 import com.shop.service.repositories.AppointmentRepository;
+import com.shop.service.repositories.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,9 +20,12 @@ public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
 
+    private final ShopRepository shopRepository;
+
     @Autowired
-    public AppointmentService(AppointmentRepository appointmentRepository) {
+    public AppointmentService(AppointmentRepository appointmentRepository, ShopRepository shopRepository) {
         this.appointmentRepository = appointmentRepository;
+        this.shopRepository = shopRepository;
     }
 
     public Page<AppointmentDto> getAllAppointments(Pageable pageable) {
@@ -44,8 +48,16 @@ public class AppointmentService {
 
         appointmentDto.setId(UUID.randomUUID());
 
-        return AppointmentMapper.INSTANCE.appointmentToDto(
-                this.appointmentRepository.save(AppointmentMapper.INSTANCE.dtoToAppointment(appointmentDto)));
+        Optional<Shop> optionalShop = this.shopRepository.findById(appointmentDto.getShopId());
+
+        if(optionalShop.isEmpty()){
+            throw new EntityNotFoundException("A Shop with that id does not exist");
+        }
+
+        Appointment appointment = AppointmentMapper.INSTANCE.dtoToAppointment(appointmentDto);
+        appointment.setShop(optionalShop.get());
+
+        return AppointmentMapper.INSTANCE.appointmentToDto(appointment);
     }
 
     public AppointmentDto updateAppointment(UUID id, AppointmentDto appointmentDto) {
@@ -68,6 +80,17 @@ public class AppointmentService {
 
         if(appointmentDto.getUserId() != null){
             appointment.setUserId(appointmentDto.getUserId());
+        }
+
+        if(appointmentDto.getShopId() != null){
+
+            Optional<Shop> optionalShop = this.shopRepository.findById(appointmentDto.getShopId());
+
+            if(optionalShop.isEmpty()){
+                throw new EntityNotFoundException("A Shop with that id does not exist");
+            }
+
+            appointment.setShop(optionalShop.get());
         }
 
         return AppointmentMapper.INSTANCE.appointmentToDto(this.appointmentRepository.save(appointment));
