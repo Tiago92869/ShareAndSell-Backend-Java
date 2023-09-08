@@ -31,6 +31,7 @@ public class ShopDto {
 
     private String phoneNumber;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Float rate;
 
     private LocalTime startTime;

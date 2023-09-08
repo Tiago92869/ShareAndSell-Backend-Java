@@ -41,7 +41,7 @@ public class ShopController {
         return this.shopService.getShopById(id);
     }
 
-    @GetMapping(value = "/")
+    @PostMapping(value = "/")
     @Operation(summary = "Create Shop")
     @ResponseStatus(HttpStatus.OK)
     public ShopDto createShop(@RequestBody ShopDto shopDto){
@@ -49,7 +49,7 @@ public class ShopController {
         return this.shopService.createShop(shopDto);
     }
 
-    @GetMapping(value = "/{id}")
+    @PatchMapping(value = "/{id}")
     @Operation(summary = "Update Shop by id")
     @ResponseStatus(HttpStatus.OK)
     public ShopDto updateShop(@PathVariable UUID id, @RequestBody ShopDto shopDto){
@@ -57,7 +57,7 @@ public class ShopController {
         return this.shopService.updateShop(id, shopDto);
     }
 
-    @GetMapping(value = "/{id}")
+    @DeleteMapping(value = "/{id}")
     @Operation(summary = "Delete Shop by id")
     @ResponseStatus(HttpStatus.OK)
     public void deleteShop(@PathVariable UUID id){

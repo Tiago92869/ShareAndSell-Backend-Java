@@ -1,6 +1,7 @@
 package com.shop.service.services;
 import com.shop.service.domain.Shop;
 import com.shop.service.dto.ShopDto;
+import com.shop.service.exceptions.BadRequestException;
 import com.shop.service.exceptions.EntityNotFoundException;
 import com.shop.service.maps.ShopMapper;
 import com.shop.service.repositories.ShopRepository;
@@ -43,6 +44,15 @@ public class ShopService {
 
         shopDto.setId(UUID.randomUUID());
 
+        //check hours
+        if(shopDto.getStartTime() != null && shopDto.getEndTime() != null){
+
+            if(shopDto.getStartTime().isAfter(shopDto.getEndTime())){
+                throw new BadRequestException("The startTime can't be later then the endTime " +
+                        "and the endTime can't be before then the startTime and both can't be equal");
+            }
+        }
+
         return ShopMapper.INSTANCE.shopToDto(
                 this.shopRepository.save(ShopMapper.INSTANCE.dtoToShop(shopDto)));
     }
@@ -77,14 +87,6 @@ public class ShopService {
             shop.setDescription(shopDto.getDescription());
         }
 
-        if(shopDto.getEndTime() != null){
-            shop.setEndTime(shopDto.getEndTime());
-        }
-
-        if(shopDto.getStartTime() != null){
-            shop.setStartTime(shopDto.getStartTime());
-        }
-
         if(shopDto.getName() != null){
             shop.setName(shopDto.getName());
         }
@@ -93,11 +95,10 @@ public class ShopService {
             shop.setPhoneNumber(shopDto.getPhoneNumber());
         }
 
-        if(shopDto.getRate() != null){
-            shop.setRate(shopDto.getRate());
-        }
+        //check hours
+        this.checkHours(shopDto, shop);
 
-        return ShopMapper.INSTANCE.shopToDto(shop);
+        return ShopMapper.INSTANCE.shopToDto(this.shopRepository.save(shop));
     }
 
     public void deleteShop(UUID id) {
@@ -109,5 +110,41 @@ public class ShopService {
         }
 
         this.shopRepository.deleteById(id);
+    }
+
+    private void checkHours(ShopDto shopDto, Shop shop){
+
+        if(shopDto.getEndTime() != null && shopDto.getStartTime() == null){
+
+            if(shopDto.getEndTime().isAfter(shop.getStartTime())){
+                shop.setEndTime(shopDto.getEndTime());
+            }
+            else{
+                throw new BadRequestException("The endTime can't be before or equal then the startTime");
+            }
+        }
+
+        if(shopDto.getStartTime() != null && shopDto.getEndTime() == null){
+
+            if(shopDto.getStartTime().isBefore(shop.getEndTime())){
+                shop.setStartTime(shopDto.getStartTime());
+            }
+            else{
+                throw new BadRequestException("The startTime can't be later or equal then the endTime");
+            }
+        }
+
+        if(shopDto.getStartTime() != null && shopDto.getEndTime() != null){
+
+            if(shopDto.getStartTime().isBefore(shopDto.getEndTime())){
+
+                shop.setStartTime(shopDto.getStartTime());
+                shop.setEndTime(shopDto.getEndTime());
+            }
+            else{
+                throw new BadRequestException("The startTime can't be later then the endTime " +
+                        "and the endTime can't be before then the startTime and both can't be equal");
+            }
+        }
     }
 }
