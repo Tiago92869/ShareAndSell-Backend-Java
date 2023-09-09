@@ -33,9 +33,9 @@ public class AppointmentController {
             @Parameter(description = "Filter by shop id.")
             @RequestParam(value = "Shop Id", required = false) UUID shopId,
             @Parameter(description = "Filter by current user id.")
-            @RequestParam(value = "User Id", required = false) UUID mine){
+            @RequestParam(value = "User Id", required = false) UUID userId){
 
-        return this.appointmentService.getAllAppointments(pageable, shopId, mine);
+        return this.appointmentService.getAllAppointments(pageable, shopId, userId);
     }
 
     @GetMapping(value = "/{id}")

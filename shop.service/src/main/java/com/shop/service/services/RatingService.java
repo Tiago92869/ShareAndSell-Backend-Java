@@ -3,6 +3,7 @@ import com.shop.service.domain.Rating;
 import com.shop.service.domain.Shop;
 import com.shop.service.dto.RatingDto;
 import com.shop.service.exceptions.EntityNotFoundException;
+import com.shop.service.maps.AppointmentMapper;
 import com.shop.service.maps.RatingMapper;
 import com.shop.service.repositories.RatingRepository;
 import com.shop.service.repositories.ShopRepository;
@@ -27,7 +28,20 @@ public class RatingService {
         this.shopRepository = shopRepository;
     }
 
-    public Page<RatingDto> getAllRatings(Pageable pageable) {
+    public Page<RatingDto> getAllRatings(Pageable pageable, UUID shopId, UUID userId) {
+
+        if(shopId != null && userId == null){
+
+            return this.ratingRepository.findByShopId(pageable, shopId).map(RatingMapper.INSTANCE::ratingToDto);
+
+        }else if(shopId == null && userId != null){
+
+            return this.ratingRepository.findByUserId(pageable, userId).map(RatingMapper.INSTANCE::ratingToDto);
+
+        }else if(shopId != null && userId != null){
+
+            return this.ratingRepository.findByShopIdAndUserId(pageable, shopId, userId).map(RatingMapper.INSTANCE::ratingToDto);
+        }
 
         return this.ratingRepository.findAll(pageable).map(RatingMapper.INSTANCE::ratingToDto);
     }

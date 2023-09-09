@@ -3,6 +3,7 @@ package com.shop.service.controllers;
 import com.shop.service.dto.RatingDto;
 import com.shop.service.services.RatingService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,9 +28,14 @@ public class RatingController {
     @GetMapping(value = "/")
     @Operation(summary = "Get all Ratings")
     @ResponseStatus(HttpStatus.OK)
-    public Page<RatingDto> getAllRatings(Pageable pageable){
+    public Page<RatingDto> getAllRatings(
+            Pageable pageable,
+            @Parameter(description = "Filter by shop id.")
+            @RequestParam(value = "Shop Id", required = false) UUID shopId,
+            @Parameter(description = "Filter by current user id.")
+            @RequestParam(value = "User Id", required = false) UUID userId){
 
-        return this.ratingService.getAllRatings(pageable);
+        return this.ratingService.getAllRatings(pageable, shopId, userId);
     }
 
     @GetMapping(value = "/{id}")
