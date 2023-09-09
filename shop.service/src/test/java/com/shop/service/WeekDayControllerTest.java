@@ -1,10 +1,5 @@
 package com.shop.service;
 
-import com.shop.service.controllers.WeekDayController;
-import com.shop.service.domain.WeekDay;
-import com.shop.service.dto.WeekDayDto;
-import com.shop.service.maps.WeekDayMapper;
-import com.shop.service.services.WeekDayService;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
