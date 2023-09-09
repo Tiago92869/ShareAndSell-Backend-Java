@@ -1,9 +1,9 @@
 package com.shop.service.controllers;
 
-import com.shop.service.domain.Appointment;
 import com.shop.service.dto.AppointmentDto;
 import com.shop.service.services.AppointmentService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,9 +28,14 @@ public class AppointmentController {
     @GetMapping(value = "/")
     @Operation(summary = "List all appointments")
     @ResponseStatus(HttpStatus.OK)
-    public Page<AppointmentDto> getAllAppointments(Pageable pageable){
+    public Page<AppointmentDto> getAllAppointments(
+            Pageable pageable,
+            @Parameter(description = "Filter by shop id.")
+            @RequestParam(value = "Shop Id", required = false) UUID shopId,
+            @Parameter(description = "Filter by current user id.")
+            @RequestParam(value = "User Id", required = false) UUID mine){
 
-        return this.appointmentService.getAllAppointments(pageable);
+        return this.appointmentService.getAllAppointments(pageable, shopId, mine);
     }
 
     @GetMapping(value = "/{id}")

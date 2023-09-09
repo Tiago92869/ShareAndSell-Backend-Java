@@ -28,7 +28,20 @@ public class AppointmentService {
         this.shopRepository = shopRepository;
     }
 
-    public Page<AppointmentDto> getAllAppointments(Pageable pageable) {
+    public Page<AppointmentDto> getAllAppointments(Pageable pageable, UUID shopId, UUID mine) {
+
+        if(shopId != null && mine == null){
+
+            return this.appointmentRepository.findByShopId(pageable, shopId).map(AppointmentMapper.INSTANCE::appointmentToDto);
+
+        }else if(shopId == null && mine != null){
+
+            return this.appointmentRepository.findByUserId(pageable, mine).map(AppointmentMapper.INSTANCE::appointmentToDto);
+
+        }else if(shopId != null && mine != null){
+
+            return this.appointmentRepository.findByShopIdAndUserId(pageable, shopId, mine).map(AppointmentMapper.INSTANCE::appointmentToDto);
+        }
 
         return this.appointmentRepository.findAll(pageable).map(AppointmentMapper.INSTANCE::appointmentToDto);
     }
@@ -57,7 +70,7 @@ public class AppointmentService {
         Appointment appointment = AppointmentMapper.INSTANCE.dtoToAppointment(appointmentDto);
         appointment.setShop(optionalShop.get());
 
-        return AppointmentMapper.INSTANCE.appointmentToDto(appointment);
+        return AppointmentMapper.INSTANCE.appointmentToDto(this.appointmentRepository.save(appointment));
     }
 
     public AppointmentDto updateAppointment(UUID id, AppointmentDto appointmentDto) {
