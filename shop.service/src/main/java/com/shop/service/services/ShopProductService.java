@@ -4,6 +4,7 @@ import com.shop.service.domain.Shop;
 import com.shop.service.domain.ShopProduct;
 import com.shop.service.dto.ShopProductDto;
 import com.shop.service.exceptions.EntityNotFoundException;
+import com.shop.service.maps.AppointmentMapper;
 import com.shop.service.maps.ShopProductMapper;
 import com.shop.service.repositories.ProductRepository;
 import com.shop.service.repositories.ShopProductRepository;
@@ -32,7 +33,38 @@ public class ShopProductService {
         this.shopRepository = shopRepository;
     }
 
-    public Page<ShopProductDto> getAllShopProducts(Pageable pageable) {
+    public Page<ShopProductDto> getAllShopProducts(Pageable pageable, UUID shopId, UUID productId, Boolean isEnable) {
+
+        if(isEnable != null){
+
+            if(shopId != null && productId == null){
+
+                return this.shopProductRepository.findByShopId(pageable, shopId).map(ShopProductMapper.INSTANCE::shopProductToDto);
+
+            }else if(shopId == null && productId != null){
+
+                return this.shopProductRepository.findByProductId(pageable, productId).map(ShopProductMapper.INSTANCE::shopProductToDto);
+
+            }else if(shopId != null && productId != null){
+
+                return this.shopProductRepository.findByShopIdAndProductId(pageable, shopId, productId).map(ShopProductMapper.INSTANCE::shopProductToDto);
+            }
+
+        }else {
+
+            if(shopId != null && productId == null){
+
+                return this.shopProductRepository.findByShopIdAndIsEnable(pageable, shopId, isEnable).map(ShopProductMapper.INSTANCE::shopProductToDto);
+
+            }else if(shopId == null && productId != null){
+
+                return this.shopProductRepository.findByProductIdAndIsEnable(pageable, productId, isEnable).map(ShopProductMapper.INSTANCE::shopProductToDto);
+
+            }else if(shopId != null && productId != null){
+
+                return this.shopProductRepository.findByShopIdAndProductIdAndIsEnable(pageable, shopId, productId, isEnable).map(ShopProductMapper.INSTANCE::shopProductToDto);
+            }
+        }
 
         return this.shopProductRepository.findAll(pageable).map(ShopProductMapper.INSTANCE::shopProductToDto);
     }
