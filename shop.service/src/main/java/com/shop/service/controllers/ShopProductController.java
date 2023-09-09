@@ -3,6 +3,7 @@ package com.shop.service.controllers;
 import com.shop.service.dto.ShopProductDto;
 import com.shop.service.services.ShopProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,7 +28,17 @@ public class ShopProductController {
     @GetMapping(value = "/")
     @Operation(summary = "Get all Shops_Products")
     @ResponseStatus(HttpStatus.OK)
-    public Page<ShopProductDto> getAllShopProducts(Pageable pageable){
+    public Page<ShopProductDto> getAllShopProducts(
+            Pageable pageable
+            /*
+            @Parameter(description = "Filter by shop id.")
+            @RequestParam(value = "Shop Id", required = false) UUID shopId,
+            @Parameter(description = "Filter by current user id.")
+            @RequestParam(value = "User Id", required = false) UUID userId,
+            @Parameter(description = "Filter by availability.")
+            @RequestParam(value = "Enable", required = false) Boolean isEnable
+            */
+            ){
 
         return this.shopProductService.getAllShopProducts(pageable);
     }

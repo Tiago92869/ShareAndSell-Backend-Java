@@ -1,9 +1,11 @@
 package com.shop.service.controllers;
 
 import com.shop.service.domain.Shop;
+import com.shop.service.domain.WeekDays;
 import com.shop.service.dto.ShopDto;
 import com.shop.service.services.ShopService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Tag(name = "Shop", description = "Shops that are available")
@@ -28,9 +31,14 @@ public class ShopController {
     @GetMapping(value = "/")
     @Operation(summary = "Get all Shops")
     @ResponseStatus(HttpStatus.OK)
-    public Page<ShopDto> getAllShops(Pageable pageable){
+    public Page<ShopDto> getAllShops(
+            Pageable pageable,
+            @Parameter(description = "Filter by days of the week day (\"MONDAY\", \"TUESDAY\", \"WEDNESDAY\", \"THURSDAY\", \"FRIDAY\", \"SATURDAY\", \"SUNDAY\").")
+            @RequestParam(value = "Day of the Week", required = false) List<String> weekDays,
+            @Parameter(description = "Filter by availability.")
+            @RequestParam(value = "Enable", required = false) Boolean isEnable){
 
-        return this.shopService.getAllShops(pageable);
+        return this.shopService.getAllShops(pageable, weekDays, isEnable);
     }
 
     @GetMapping(value = "/{id}")

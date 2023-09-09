@@ -28,19 +28,19 @@ public class AppointmentService {
         this.shopRepository = shopRepository;
     }
 
-    public Page<AppointmentDto> getAllAppointments(Pageable pageable, UUID shopId, UUID mine) {
+    public Page<AppointmentDto> getAllAppointments(Pageable pageable, UUID shopId, UUID userId) {
 
-        if(shopId != null && mine == null){
+        if(shopId != null && userId == null){
 
             return this.appointmentRepository.findByShopId(pageable, shopId).map(AppointmentMapper.INSTANCE::appointmentToDto);
 
-        }else if(shopId == null && mine != null){
+        }else if(shopId == null && userId != null){
 
-            return this.appointmentRepository.findByUserId(pageable, mine).map(AppointmentMapper.INSTANCE::appointmentToDto);
+            return this.appointmentRepository.findByUserId(pageable, userId).map(AppointmentMapper.INSTANCE::appointmentToDto);
 
-        }else if(shopId != null && mine != null){
+        }else if(shopId != null && userId != null){
 
-            return this.appointmentRepository.findByShopIdAndUserId(pageable, shopId, mine).map(AppointmentMapper.INSTANCE::appointmentToDto);
+            return this.appointmentRepository.findByShopIdAndUserId(pageable, shopId, userId).map(AppointmentMapper.INSTANCE::appointmentToDto);
         }
 
         return this.appointmentRepository.findAll(pageable).map(AppointmentMapper.INSTANCE::appointmentToDto);

@@ -1,5 +1,6 @@
 package com.shop.service.services;
 import com.shop.service.domain.Shop;
+import com.shop.service.domain.WeekDays;
 import com.shop.service.dto.ShopDto;
 import com.shop.service.exceptions.BadRequestException;
 import com.shop.service.exceptions.EntityNotFoundException;
@@ -10,13 +11,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ShopService {
 
+    private final List<String> weekDaysList = Arrays.asList("MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY");
     private final ShopRepository shopRepository;
 
     @Autowired
@@ -24,7 +25,35 @@ public class ShopService {
         this.shopRepository = shopRepository;
     }
 
-    public Page<ShopDto> getAllShops(Pageable pageable) {
+    public Page<ShopDto> getAllShops(Pageable pageable, List<String> weekDays, Boolean isEnable) {
+
+        List<WeekDays> enumWeekDays = new ArrayList<>();
+
+        if(weekDays != null){
+
+            //check if there is a invalid weekDay
+            if(!new HashSet<>(this.weekDaysList).containsAll(weekDays)){
+                throw new BadRequestException("There is a element that is not a WeekDay");
+            }
+
+            enumWeekDays = weekDays.stream()
+                    .map(WeekDays::valueOf) // Assuming YourEnum has a valueOf method to convert from String to Enum
+                    .collect(Collectors.toList());
+        }
+
+        if(weekDays != null && isEnable == null){
+
+            return this.shopRepository.findByWeekDaysIn(pageable, enumWeekDays).map(ShopMapper.INSTANCE::shopToDto);
+
+        }else if(weekDays == null && isEnable != null){
+
+            return this.shopRepository.findByIsEnable(pageable, isEnable).map(ShopMapper.INSTANCE::shopToDto);
+
+        }else if(weekDays != null && isEnable != null){
+
+            return this.shopRepository.findByWeekDaysInAndIsEnable(pageable, enumWeekDays, isEnable).map(ShopMapper.INSTANCE::shopToDto);
+
+        }
 
         return this.shopRepository.findAll(pageable).map(ShopMapper.INSTANCE::shopToDto);
     }
