@@ -61,7 +61,7 @@ public class ShopProductController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteShopProducts(@PathVariable UUID id){
 
-        this.shopProductService.deleteShopProducts();
+        this.shopProductService.deleteShopProducts(id);
     }
 
 
