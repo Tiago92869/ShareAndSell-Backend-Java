@@ -35,13 +35,13 @@ public class WeekDayService {
 
             List<WeekDay> weekDayList = new ArrayList<>();
 
-            weekDayList.add(new WeekDay(UUID.randomUUID(), "Monday"));
-            weekDayList.add(new WeekDay(UUID.randomUUID(), "Tuesday"));
-            weekDayList.add(new WeekDay(UUID.randomUUID(), "Wednesday"));
-            weekDayList.add(new WeekDay(UUID.randomUUID(), "Thursday"));
-            weekDayList.add(new WeekDay(UUID.randomUUID(), "Friday"));
-            weekDayList.add(new WeekDay(UUID.randomUUID(), "Saturday"));
-            weekDayList.add(new WeekDay(UUID.randomUUID(), "Sunday"));
+            weekDayList.add(new WeekDay(UUID.randomUUID(), "Monday", null));
+            weekDayList.add(new WeekDay(UUID.randomUUID(), "Tuesday", null));
+            weekDayList.add(new WeekDay(UUID.randomUUID(), "Wednesday", null));
+            weekDayList.add(new WeekDay(UUID.randomUUID(), "Thursday", null));
+            weekDayList.add(new WeekDay(UUID.randomUUID(), "Friday", null));
+            weekDayList.add(new WeekDay(UUID.randomUUID(), "Saturday", null));
+            weekDayList.add(new WeekDay(UUID.randomUUID(), "Sunday", null));
 
             this.weekDayRepository.saveAll(weekDayList);
         }

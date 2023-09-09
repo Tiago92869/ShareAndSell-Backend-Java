@@ -57,10 +57,6 @@ public class Shop {
     @Column(name = "isEnable")
     private Boolean isEnable;
 
-    @ManyToMany
-    @Column(name = "weekDays")
-    private List<WeekDay> weekDays;
-
     @OneToMany(mappedBy = "shop")
     private List<Appointment> appointments;
 
@@ -69,4 +65,7 @@ public class Shop {
 
     @OneToMany(mappedBy = "shop")
     private List<ShopProduct> shopProducts;
+
+    @OneToMany(mappedBy = "shop")
+    private List<ShopWeekDay> shopWeekDays;
 }

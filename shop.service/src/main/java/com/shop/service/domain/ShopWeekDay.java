@@ -7,15 +7,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.util.List;
 import java.util.UUID;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "week_day")
-public class WeekDay {
+@NoArgsConstructor
+@Entity(name = "shopWeekDay")
+public class ShopWeekDay {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -26,9 +25,11 @@ public class WeekDay {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "name")
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "shop_id")
+    private Shop shop;
 
-    @OneToMany(mappedBy = "weekDay")
-    private List<ShopWeekDay> shopWeekDays;
+    @ManyToOne
+    @JoinColumn(name = "weekDay_id")
+    private WeekDay weekDay;
 }
