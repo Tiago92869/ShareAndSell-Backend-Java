@@ -1,13 +1,14 @@
 package com.shop.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
+import com.shop.service.domain.WeekDays;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalTime;
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -39,4 +40,6 @@ public class ShopDto {
     private LocalTime endTime;
 
     private Boolean isEnable;
+
+    private List<WeekDays> weekDays;
 }
