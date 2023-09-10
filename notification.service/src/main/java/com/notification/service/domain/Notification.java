@@ -18,9 +18,7 @@ import java.util.UUID;
 public class Notification {
 
     private UUID id;
-    private String recipient;
     private LocalDateTime timeStamp;
     private String title;
     private String description;
-    private Boolean read;
 }
