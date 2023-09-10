@@ -1,0 +1,11 @@
+server:
+  port: 3031
+  servlet:
+    contextPath: /api/notification-service
+
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: notification_service_db
