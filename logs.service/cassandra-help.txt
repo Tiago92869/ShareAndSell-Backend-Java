@@ -1,0 +1,22 @@
+
+#First
+docker-compose up
+
+#Second
+docker ps
+
+#Third
+docker exec -it <cassandra-image-id> bash
+
+#Fourth(enter cassandra)
+cqlsh
+
+#Fifth(create my keyspace)
+CREATE KEYSPACE mykeyspace
+WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 3};
+
+#Sixth(use the keyspace)
+use mykeyspace
+
+#Seventh(create table)
+CREATE TABLE Log(id UUID PRIMARY KEY, userId UUID, timeStamp timestamp, description text);
