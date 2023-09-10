@@ -66,6 +66,7 @@ public class Shop {
     @OneToMany(mappedBy = "shop")
     private List<ShopProduct> shopProducts;
 
+    @ElementCollection
     @Enumerated(EnumType.STRING)
     private List<WeekDays> weekDays;
 }
