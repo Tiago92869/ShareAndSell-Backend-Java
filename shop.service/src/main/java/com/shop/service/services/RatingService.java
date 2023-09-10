@@ -1,9 +1,9 @@
 package com.shop.service.services;
+
 import com.shop.service.domain.Rating;
 import com.shop.service.domain.Shop;
 import com.shop.service.dto.RatingDto;
 import com.shop.service.exceptions.EntityNotFoundException;
-import com.shop.service.maps.AppointmentMapper;
 import com.shop.service.maps.RatingMapper;
 import com.shop.service.repositories.RatingRepository;
 import com.shop.service.repositories.ShopRepository;
@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -70,7 +71,11 @@ public class RatingService {
         Rating rating = RatingMapper.INSTANCE.dtoToRating(ratingDto);
         rating.setShop(optionalShop.get());
 
-        return RatingMapper.INSTANCE.ratingToDto(this.ratingRepository.save(rating));
+        RatingDto finalRating = RatingMapper.INSTANCE.ratingToDto(this.ratingRepository.save(rating));
+
+        this.setRateForShop(rating.getShop().getId());
+
+        return finalRating;
     }
 
     public RatingDto updateRating(UUID id, RatingDto ratingDto) {
@@ -91,14 +96,6 @@ public class RatingService {
             rating.setDescription(ratingDto.getDescription());
         }
 
-        if(ratingDto.getDate() != null){
-            rating.setDate(ratingDto.getDate());
-        }
-
-        if(ratingDto.getUserId() != null){
-            rating.setUserId(ratingDto.getUserId());
-        }
-
         if(ratingDto.getShopId() != null){
 
             Optional<Shop> optionalShop = this.shopRepository.findById(ratingDto.getShopId());
@@ -110,7 +107,11 @@ public class RatingService {
             rating.setShop(optionalShop.get());
         }
 
-        return RatingMapper.INSTANCE.ratingToDto(this.ratingRepository.save(rating));
+        RatingDto finalRating = RatingMapper.INSTANCE.ratingToDto(this.ratingRepository.save(rating));
+
+        this.setRateForShop(rating.getShop().getId());
+
+        return finalRating;
     }
 
     public void deleteRating(UUID id) {
@@ -122,5 +123,20 @@ public class RatingService {
         }
 
         this.ratingRepository.deleteById(id);
+    }
+
+    private void setRateForShop(UUID shopId){
+
+        Optional<Shop> optionalShop = this.shopRepository.findById(shopId);
+
+        if(optionalShop.isEmpty()){
+            throw new EntityNotFoundException("A Shop with that id does not exist");
+        }
+
+        List<Rating> ratingList = this.ratingRepository.findByShopId(shopId);
+
+        Float averageRate = (float) ratingList.stream().mapToDouble(Rating::getRate).average().orElse(0.0);
+
+        optionalShop.get().setRate(averageRate);
     }
 }
