@@ -1,4 +1,4 @@
-package com.shop.service.config;
+package com.notification.service.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -16,13 +16,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI usersMicroserviceOpenAPI() {
         return new OpenAPI()
-                .info(new Info().title("Shop Service")
+                .info(new Info().title("Notification Service")
                         .version("1.0"));
-    }
-
-    static {
-        var schema = new Schema<LocalTime>();
-        schema.example(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")));
-        SpringDocUtils.getConfig().replaceWithSchema(LocalTime.class, schema);
     }
 }
