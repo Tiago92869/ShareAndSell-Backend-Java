@@ -17,11 +17,8 @@ public class NotificationDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
-    private String recipient;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime timeStamp;
     private String title;
     private String description;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Boolean read;
 }
