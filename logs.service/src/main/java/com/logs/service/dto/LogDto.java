@@ -17,7 +17,7 @@ public class LogDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
-    private UUID userID;
+    private UUID userId;
     private LocalDateTime timeStamp;
     private String description;
 }
