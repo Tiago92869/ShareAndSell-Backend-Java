@@ -4,6 +4,7 @@ import com.logs.service.domain.Log;
 import com.logs.service.dto.LogDto;
 import com.logs.service.service.LogService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,9 +32,10 @@ public class LogController {
     @GetMapping("/")
     @Operation(summary = "Get all Logs")
     @ResponseStatus(HttpStatus.OK)
-    public List<LogDto> getAllLogs(){
+    public List<LogDto> getAllLogs(@Parameter(description = "Filter by current user id.")
+                                   @RequestParam(value = "User Id", required = false) UUID userId){
 
-        return this.logService.getAllLogs();
+        return this.logService.getAllLogs(userId);
     }
 
     @GetMapping("/{id}")

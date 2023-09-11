@@ -6,14 +6,11 @@ import com.logs.service.exceptions.EntityNotFoundException;
 import com.logs.service.mapper.LogMapper;
 import com.logs.service.repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -26,7 +23,12 @@ public class LogService {
         this.logRepository = logRepository;
     }
 
-    public List<LogDto> getAllLogs() {
+    public List<LogDto> getAllLogs(UUID userId) {
+
+        if(userId != null){
+
+            return this.logRepository.findByUserId(userId).stream().map(LogMapper.INSTANCE::logToDto).toList();
+        }
 
         return this.logRepository.findAll().stream().map(LogMapper.INSTANCE::logToDto).toList();
     }
