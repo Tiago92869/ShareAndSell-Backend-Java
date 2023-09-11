@@ -5,9 +5,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5430/shop_service_db
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://localhost:5432/shop-service-db
+    username: admin
+    password: admin
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

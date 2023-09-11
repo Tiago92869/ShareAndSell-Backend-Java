@@ -1,0 +1,1 @@
+CREATE database shop_service_db;
