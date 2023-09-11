@@ -4,4 +4,4 @@ services:
     image: cassandra
     container_name: mycassandra
     ports:
-      - "3035:9042"
+      - "9042:9042"

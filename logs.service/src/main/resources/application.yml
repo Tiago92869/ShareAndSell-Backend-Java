@@ -4,9 +4,9 @@ server:
     contextPath: /api/logs-service
 
 spring:
-  data:
-    cassandra:
-      port: 3035
-      contact-points: mycassandra
-      keyspace-name: mykeyspace
-      entity-base-package: com.example.cassandra.springbootcassandrademo.model
+  cassandra:
+    port: 9042
+    contact-points: mycassandra
+    keyspace-name: mykeyspace
+    #local-datacenter: datacenter1
+    #entity-base-package: com.example.cassandra.springbootcassandrademo.model
