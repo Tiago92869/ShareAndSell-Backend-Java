@@ -5,7 +5,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/shopdb
+      url: jdbc:postgresql://postgres:5432/shopdb
     username: admin
     password: admin
     driver-class-name: org.postgresql.Driver
