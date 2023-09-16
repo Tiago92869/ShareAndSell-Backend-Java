@@ -27,13 +27,13 @@ public class TestProductService {
 
     private ProductService productService;
 
-    private Product sampleProduct1 = new Product(UUID.fromString("a9c6998f-e346-4fee-a451-8290bef086fd"),
+    private final Product sampleProduct1 = new Product(UUID.fromString("a9c6998f-e346-4fee-a451-8290bef086fd"),
             "Apple", new byte[111222333], "Fruit", "Apple-image", null);
 
-    private Product sampleProduct2 = new Product(UUID.fromString("c048d017-a4da-48a4-97d1-4527af863518"),
+    private final Product sampleProduct2 = new Product(UUID.fromString("c048d017-a4da-48a4-97d1-4527af863518"),
             "Potato", new byte[444555666], "Vegetal", "Potato-image", null);
 
-    private ProductDto sampleProductDto =
+    private final ProductDto sampleProductDto =
             new ProductDto(UUID.fromString("a9c6998f-e346-4fee-a451-8290bef086fd"), "Apple");
 
     @BeforeEach
@@ -59,7 +59,7 @@ public class TestProductService {
     public void testGetProductById(){
 
         when(productRepository.findById(UUID.fromString("a9c6998f-e346-4fee-a451-8290bef086fd")))
-                .thenReturn(Optional.ofNullable(sampleProduct1));
+                .thenReturn(Optional.of(sampleProduct1));
 
         ProductDto result = productService.getProductById(UUID.fromString("a9c6998f-e346-4fee-a451-8290bef086fd"));
 
@@ -82,7 +82,7 @@ public class TestProductService {
     @Test
     public void testUpdateProduct(){
 
-        when(productRepository.findById(sampleProductDto.getId())).thenReturn(Optional.ofNullable(sampleProduct1));
+        when(productRepository.findById(sampleProductDto.getId())).thenReturn(Optional.of(sampleProduct1));
 
         when(productRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -95,7 +95,7 @@ public class TestProductService {
     @Test
     public void testDeleteProduct(){
 
-        when(productRepository.findById(sampleProductDto.getId())).thenReturn(Optional.ofNullable(sampleProduct1));
+        when(productRepository.findById(sampleProductDto.getId())).thenReturn(Optional.of(sampleProduct1));
 
         assertDoesNotThrow(() -> productService.deleteProductById(sampleProductDto.getId()));
     }

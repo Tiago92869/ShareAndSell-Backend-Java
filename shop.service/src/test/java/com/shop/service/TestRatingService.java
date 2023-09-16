@@ -33,17 +33,17 @@ public class TestRatingService {
     @Mock
     private ShopRepository shopRepository;
 
-    private Shop sampleShop = new Shop(UUID.fromString("f085f23a-d370-4ae8-9b14-74e8077df5ff"));
+    private final Shop sampleShop = new Shop(UUID.fromString("f085f23a-d370-4ae8-9b14-74e8077df5ff"));
 
-    private Rating sampleRating1 = new Rating(UUID.fromString("89d3c769-8f45-41fb-b9dc-e62796f29ff1"),
+    private final Rating sampleRating1 = new Rating(UUID.fromString("89d3c769-8f45-41fb-b9dc-e62796f29ff1"),
             (float) 4.4, "Very good service", LocalDate.now(),
             UUID.fromString("6735c697-3a63-4c91-a164-680e98c9f5ea"), sampleShop);
 
-    private Rating sampleRating2 = new Rating(UUID.fromString("684208c7-6378-4d74-bc16-539bf30dfa40"),
+    private final Rating sampleRating2 = new Rating(UUID.fromString("684208c7-6378-4d74-bc16-539bf30dfa40"),
             (float) 4.4, "Very good service", LocalDate.now().minusDays(2),
             UUID.fromString("684208c7-6378-4d74-bc16-539bf30dfa40"), sampleShop);
 
-    private RatingDto sampleRatingDto = new RatingDto(UUID.fromString("89d3c769-8f45-41fb-b9dc-e62796f29ff1"),
+    private final RatingDto sampleRatingDto = new RatingDto(UUID.fromString("89d3c769-8f45-41fb-b9dc-e62796f29ff1"),
             (float) 4.4, "Very good service", LocalDate.now(),
             UUID.fromString("6735c697-3a63-4c91-a164-680e98c9f5ea"),
             UUID.fromString("f085f23a-d370-4ae8-9b14-74e8077df5ff"));
@@ -111,7 +111,7 @@ public class TestRatingService {
     public void testGetRatingById(){
 
         when(ratingRepository.findById(sampleRatingDto.getId()))
-                .thenReturn(Optional.ofNullable(sampleRating1));
+                .thenReturn(Optional.of(sampleRating1));
 
         RatingDto result = ratingService.getRatingById(sampleRatingDto.getId());
 
@@ -124,7 +124,7 @@ public class TestRatingService {
 
         when(ratingRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        when(shopRepository.findById(sampleShop.getId())).thenReturn(Optional.ofNullable(sampleShop));
+        when(shopRepository.findById(sampleShop.getId())).thenReturn(Optional.of(sampleShop));
 
         RatingDto result = ratingService.createRatting(sampleRatingDto);
 
@@ -136,11 +136,11 @@ public class TestRatingService {
     public void testUpdateRating(){
 
         when(ratingRepository.findById(sampleRatingDto.getId()))
-                .thenReturn(Optional.ofNullable(sampleRating1));
+                .thenReturn(Optional.of(sampleRating1));
 
         when(ratingRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        when(shopRepository.findById(sampleShop.getId())).thenReturn(Optional.ofNullable(sampleShop));
+        when(shopRepository.findById(sampleShop.getId())).thenReturn(Optional.of(sampleShop));
 
         RatingDto result = ratingService.updateRating(sampleRatingDto.getId(), sampleRatingDto);
 
@@ -152,7 +152,7 @@ public class TestRatingService {
     @Test
     public void deleteRating(){
 
-        when(ratingRepository.findById(sampleRatingDto.getId())).thenReturn(Optional.ofNullable(sampleRating1));
+        when(ratingRepository.findById(sampleRatingDto.getId())).thenReturn(Optional.of(sampleRating1));
 
         assertDoesNotThrow(() -> ratingService.deleteRating(sampleRating1.getId()));
     }
