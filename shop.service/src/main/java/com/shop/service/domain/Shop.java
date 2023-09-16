@@ -69,4 +69,8 @@ public class Shop {
     @ElementCollection
     @Enumerated(EnumType.STRING)
     private List<WeekDays> weekDays;
+
+    public Shop(UUID id) {
+        this.id = id;
+    }
 }
