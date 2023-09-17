@@ -3,6 +3,7 @@ package com.shop.service;
 import com.shop.service.domain.Shop;
 import com.shop.service.domain.WeekDays;
 import com.shop.service.dto.ShopDto;
+import com.shop.service.maps.ShopMapper;
 import com.shop.service.repositories.ShopRepository;
 import com.shop.service.services.ShopService;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,6 +55,26 @@ public class TestShopService {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         shopService = new ShopService(shopRepository);
+    }
+
+    @Test
+    public void testShopToDto(){
+
+        ShopDto result = ShopMapper.INSTANCE.shopToDto(sampleShop1);
+
+        assertNotNull(result);
+        assertEquals(result.getId(), sampleShop1.getId());
+        assertEquals(result.getDescription(), sampleShop1.getDescription());
+    }
+
+    @Test
+    public void testDtoToShop(){
+
+        Shop result = ShopMapper.INSTANCE.dtoToShop(sampleShopDto);
+
+        assertNotNull(result);
+        assertEquals(result.getId(), sampleShopDto.getId());
+        assertEquals(result.getDescription(), sampleShopDto.getDescription());
     }
 
     @Test

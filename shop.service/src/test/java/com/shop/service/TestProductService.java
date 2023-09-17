@@ -2,6 +2,7 @@ package com.shop.service;
 
 import com.shop.service.domain.Product;
 import com.shop.service.dto.ProductDto;
+import com.shop.service.maps.ProductMapper;
 import com.shop.service.repositories.ProductRepository;
 import com.shop.service.services.ProductService;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +19,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 
 public class TestProductService {
 
@@ -42,6 +44,25 @@ public class TestProductService {
         productService = new ProductService(productRepository);
     }
 
+    @Test
+    public void testAppointmentToDto(){
+
+        ProductDto result = ProductMapper.INSTANCE.productToDto(sampleProduct1);
+
+        assertNotNull(result);
+        assertEquals(result.getDescription(), sampleProduct1.getDescription());
+        assertEquals(result.getId(), sampleProduct1.getId());
+    }
+
+    @Test
+    public void testDtoToAppointment(){
+
+        Product result = ProductMapper.INSTANCE.dtoToProduct(sampleProductDto);
+
+        assertNotNull(result);
+        assertEquals(result.getDescription(), sampleProductDto.getDescription());
+        assertEquals(result.getId(), sampleProductDto.getId());
+    }
 
     @Test
     public void testGetAllProducts(){

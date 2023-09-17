@@ -4,6 +4,7 @@ import com.shop.service.domain.Product;
 import com.shop.service.domain.Shop;
 import com.shop.service.domain.ShopProduct;
 import com.shop.service.dto.ShopProductDto;
+import com.shop.service.maps.ShopProductMapper;
 import com.shop.service.repositories.ProductRepository;
 import com.shop.service.repositories.ShopProductRepository;
 import com.shop.service.repositories.ShopRepository;
@@ -60,6 +61,26 @@ public class TestShopProductService {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         shopProductService = new ShopProductService(shopProductRepository, productRepository, shopRepository);
+    }
+
+    @Test
+    public void testShopProductToDto(){
+
+        ShopProductDto result = ShopProductMapper.INSTANCE.shopProductToDto(sampleShopProduct1);
+
+        assertNotNull(result);
+        assertEquals(result.getProductId(), sampleShopProduct1.getProduct().getId());
+        assertEquals(result.getShopId(), sampleShopProduct1.getShop().getId());
+    }
+
+    @Test
+    public void testDtoToShopProduct(){
+
+        ShopProduct result = ShopProductMapper.INSTANCE.dtoToShopProduct(sampleShopProductDto);
+
+        assertNotNull(result);
+        assertEquals(result.getId(), sampleShopProductDto.getId());
+        assertEquals(result.getIsEnable(), sampleShopProductDto.getIsEnable());
     }
 
     @Test
