@@ -50,7 +50,7 @@ public class TestAppointmentController {
             UUID.fromString("a8ffa85f-14a2-4799-9b9d-3f55258a2b32"));
 
     private final String sampleAppointmentJson = "{\"time\": \"11:38:25\"," +
-            "\"DATE\": \"2023-09-17\"," +
+            "\"date\": \"2023-09-17\"," +
             "\"userId\": \"42b3421a-aab6-4a45-92ea-ce556d2f5018\"," +
             "\"shopId\": \"a8ffa85f-14a2-4799-9b9d-3f55258a2b32\"}";
 
