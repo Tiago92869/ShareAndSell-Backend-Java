@@ -3,6 +3,7 @@ package com.shop.service;
 import com.shop.service.domain.Rating;
 import com.shop.service.domain.Shop;
 import com.shop.service.dto.RatingDto;
+import com.shop.service.maps.RatingMapper;
 import com.shop.service.repositories.RatingRepository;
 import com.shop.service.repositories.ShopRepository;
 import com.shop.service.services.RatingService;
@@ -52,6 +53,26 @@ public class TestRatingService {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         ratingService = new RatingService(ratingRepository, shopRepository);
+    }
+
+    @Test
+    public void testRatingToDto(){
+
+        RatingDto result = RatingMapper.INSTANCE.ratingToDto(sampleRating1);
+
+        assertNotNull(result);
+        assertEquals(result.getUserId(), sampleRating1.getUserId());
+        assertEquals(result.getDate(), sampleRating1.getDate());
+    }
+
+    @Test
+    public void testDtoToRating(){
+
+        Rating result = RatingMapper.INSTANCE.dtoToRating(sampleRatingDto);
+
+        assertNotNull(result);
+        assertEquals(result.getUserId(), sampleRatingDto.getUserId());
+        assertEquals(result.getDate(), sampleRatingDto.getDate());
     }
 
     @Test

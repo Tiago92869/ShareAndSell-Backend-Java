@@ -3,6 +3,7 @@ package com.shop.service;
 import com.shop.service.domain.Appointment;
 import com.shop.service.domain.Shop;
 import com.shop.service.dto.AppointmentDto;
+import com.shop.service.maps.AppointmentMapper;
 import com.shop.service.repositories.AppointmentRepository;
 import com.shop.service.repositories.ShopRepository;
 import com.shop.service.services.AppointmentService;
@@ -56,6 +57,25 @@ public class TestAppointmentService {
         appointmentService = new AppointmentService(appointmentRepository, shopRepository);
     }
 
+    @Test
+    public void testProductToDto(){
+
+        AppointmentDto result = AppointmentMapper.INSTANCE.appointmentToDto(sampleAppointment1);
+
+        assertNotNull(result);
+        assertEquals(result.getUserId(), sampleAppointment1.getUserId());
+        assertEquals(result.getDate(), sampleAppointment1.getDate());
+    }
+
+    @Test
+    public void testDtoToProduct(){
+
+        Appointment result = AppointmentMapper.INSTANCE.dtoToAppointment(sampleAppointmentDto);
+
+        assertNotNull(result);
+        assertEquals(result.getUserId(), sampleAppointmentDto.getUserId());
+        assertEquals(result.getDate(), sampleAppointmentDto.getDate());
+    }
 
     @Test
     public void testGetAllAppointments(){
