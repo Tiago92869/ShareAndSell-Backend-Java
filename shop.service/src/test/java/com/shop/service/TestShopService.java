@@ -2,10 +2,8 @@ package com.shop.service;
 
 import com.shop.service.domain.Shop;
 import com.shop.service.domain.WeekDays;
-import com.shop.service.dto.ProductDto;
 import com.shop.service.dto.ShopDto;
 import com.shop.service.repositories.ShopRepository;
-import com.shop.service.services.ShopProductService;
 import com.shop.service.services.ShopService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +28,7 @@ public class TestShopService {
 
     private final List<WeekDays> weekDaysList2 = new ArrayList<>(Collections.singleton(WeekDays.SUNDAY));
 
-    private final List<String> weekDayListString = Arrays.asList("MONDAY");
+    private final List<String> weekDayListString = List.of("MONDAY");
 
     @Mock
     private ShopRepository shopRepository;
