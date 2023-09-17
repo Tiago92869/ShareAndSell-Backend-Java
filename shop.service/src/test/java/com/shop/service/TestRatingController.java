@@ -47,7 +47,7 @@ public class TestRatingController {
             UUID.fromString("a8ffa85f-14a2-4799-9b9d-3f55258a2b32"));
 
     private final String sampleRatingJson = "{\"rate\": 4.4," +
-            "\"description\": \"\"," +
+            "\"description\": \"Very good service\"," +
             "\"date\": \"2023-09-17\"," +
             "\"userId\": \"6735c697-3a63-4c91-a164-680e98c9f5ea\"," +
             "\"shopId\": \"f085f23a-d370-4ae8-9b14-74e8077df5ff\"}";
