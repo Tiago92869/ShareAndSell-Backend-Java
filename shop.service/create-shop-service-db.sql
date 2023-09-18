@@ -1,1 +1,1 @@
-CREATE database shop_service_db;
+cCREATE database shop_service_db;
