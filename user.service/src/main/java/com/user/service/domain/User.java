@@ -27,7 +27,7 @@ public class User {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "email")
+    @Column(unique = true, name = "email")
     private String email;
 
     @Column(name = "fullName")
