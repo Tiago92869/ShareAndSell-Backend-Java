@@ -49,7 +49,7 @@ public class TestUserService {
     }
 
     @Test
-    public void testAppointmentToDto(){
+    public void testUserToDto(){
 
         UserDto result = UserMapper.INSTANCE.userToDto(sampleUser1);
 
@@ -59,7 +59,7 @@ public class TestUserService {
     }
 
     @Test
-    public void testDtoToAppointment(){
+    public void testDtoToUser(){
 
         User result = UserMapper.INSTANCE.dtoToUser(sampleUserDto);
 
@@ -69,7 +69,7 @@ public class TestUserService {
     }
 
     @Test
-    public void testGetAllProducts(){
+    public void testGetAllUsers(){
 
         when(userRepository.findAll(any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(sampleUser1, sampleUser2)));
@@ -81,7 +81,7 @@ public class TestUserService {
     }
 
     @Test
-    public void testGetProductById(){
+    public void testGetUserById(){
 
         when(userRepository.findById(UUID.fromString("a9c6998f-e346-4fee-a451-8290bef086fd")))
                 .thenReturn(Optional.of(sampleUser1));
@@ -93,7 +93,7 @@ public class TestUserService {
     }
 
     @Test
-    public void testCreateProduct(){
+    public void testCreateUser(){
 
         when(userRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -105,7 +105,7 @@ public class TestUserService {
     }
 
     @Test
-    public void testUpdateProduct(){
+    public void testUpdateUser(){
 
         when(userRepository.findById(sampleUserDto.getId())).thenReturn(Optional.of(sampleUser1));
 
@@ -118,7 +118,7 @@ public class TestUserService {
     }
 
     @Test
-    public void testDeleteProduct(){
+    public void testDeleteUser(){
 
         when(userRepository.findById(sampleUserDto.getId())).thenReturn(Optional.of(sampleUser1));
 
