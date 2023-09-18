@@ -23,7 +23,12 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Page<UserDto> getAllUsers(Pageable pageable) {
+    public Page<UserDto> getAllUsers(Pageable pageable, Boolean isEnable) {
+
+        if (isEnable != null) {
+
+            return this.userRepository.findByIsEnable(pageable, isEnable).map(UserMapper.INSTANCE::userToDto);
+        }
 
         return this.userRepository.findAll(pageable).map(UserMapper.INSTANCE::userToDto);
     }

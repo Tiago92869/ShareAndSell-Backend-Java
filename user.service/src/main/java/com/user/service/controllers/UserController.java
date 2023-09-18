@@ -3,6 +3,7 @@ package com.user.service.controllers;
 import com.user.service.dto.UserDto;
 import com.user.service.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,15 +26,17 @@ public class UserController {
     }
 
     @GetMapping("/")
-    @Operation(description = "")
+    @Operation(description = "Get all Users")
     @ResponseStatus(HttpStatus.OK)
-    public Page<UserDto> getAllUsers(Pageable pageable){
+    public Page<UserDto> getAllUsers(Pageable pageable,
+                                     @Parameter(description = "Filter by availability.")
+                                     @RequestParam(value = "Enable", required = false) Boolean isEnable){
 
-        return this.userService.getAllUsers(pageable);
+        return this.userService.getAllUsers(pageable, isEnable);
     }
 
     @GetMapping("/{id}")
-    @Operation(description = "")
+    @Operation(description = "Get User by id")
     @ResponseStatus(HttpStatus.OK)
     public UserDto getUserById(@PathVariable UUID id){
 
@@ -41,7 +44,7 @@ public class UserController {
     }
 
     @PostMapping("/")
-    @Operation(description = "")
+    @Operation(description = "Create User")
     @ResponseStatus(HttpStatus.OK)
     public UserDto createUser(@RequestBody UserDto userDto){
 
@@ -49,7 +52,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    @Operation(description = "")
+    @Operation(description = "Update User by id")
     @ResponseStatus(HttpStatus.OK)
     public UserDto updateUser(@PathVariable UUID id, @RequestBody UserDto userDto){
 
@@ -57,7 +60,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(description = "")
+    @Operation(description = "Delete User by id")
     @ResponseStatus(HttpStatus.OK)
     public void deleteUser(@PathVariable UUID id){
 

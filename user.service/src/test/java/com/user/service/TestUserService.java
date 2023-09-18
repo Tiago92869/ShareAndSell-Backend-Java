@@ -74,10 +74,22 @@ public class TestUserService {
         when(userRepository.findAll(any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(sampleUser1, sampleUser2)));
 
-        Page<UserDto> result = userService.getAllUsers(PageRequest.of(0, 10));
+        Page<UserDto> result = userService.getAllUsers(PageRequest.of(0, 10), null);
 
         assertNotNull(result);
         assertEquals(2, result.getTotalElements());
+    }
+
+    @Test
+    public void testGetAllUsersTrue(){
+
+        when(userRepository.findByIsEnable(any(Pageable.class), any(Boolean.class)))
+                .thenReturn(new PageImpl<>(List.of(sampleUser1)));
+
+        Page<UserDto> result = userService.getAllUsers(PageRequest.of(0, 10), true);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
     }
 
     @Test

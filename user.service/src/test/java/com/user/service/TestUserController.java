@@ -22,6 +22,7 @@ import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -56,13 +57,26 @@ public class TestUserController {
     @Test
     public void testGetAllUsers() throws Exception {
 
-        when(userService.getAllUsers(any(Pageable.class)))
+        when(userService.getAllUsers(any(Pageable.class), eq(null)))
                 .thenReturn(new PageImpl<>(List.of(sampleUserDto1, sampleUserDto2)));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/user/"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(2)));
+    }
+
+    @Test
+    public void testGetAllUsersTrue() throws Exception {
+
+        when(userService.getAllUsers(any(Pageable.class), any(Boolean.class)))
+                .thenReturn(new PageImpl<>(List.of(sampleUserDto1)));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/")
+                        .param("Enable", String.valueOf(Boolean.TRUE)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(1)));
     }
 
     @Test
