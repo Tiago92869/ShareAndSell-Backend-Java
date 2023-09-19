@@ -4,6 +4,7 @@ import com.user.service.domain.User;
 import com.user.service.dto.UserDto;
 import com.user.service.exceptions.EntityNotFoundException;
 import com.user.service.maps.UserMapper;
+import com.user.service.rabbit.ProducerService;
 import com.user.service.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,9 +19,12 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final ProducerService producerService;
+
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, ProducerService producerService) {
         this.userRepository = userRepository;
+        this.producerService = producerService;
     }
 
     public Page<UserDto> getAllUsers(Pageable pageable, Boolean isEnable) {
@@ -110,5 +114,6 @@ public class UserService {
         }
 
         this.userRepository.deleteById(id);
+        this.producerService.deleteAppointmentByUserId(String.valueOf(id));
     }
 }

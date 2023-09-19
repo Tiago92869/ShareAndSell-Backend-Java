@@ -12,6 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -118,5 +121,12 @@ public class AppointmentService {
         }
 
         this.appointmentRepository.deleteById(id);
+    }
+
+    public void deleteAppointmentByUserId(UUID userId){
+
+        List<Appointment> appointmentList = this.appointmentRepository.findByUserIdAndFutureDateTime(userId);
+
+        this.appointmentRepository.deleteAll(appointmentList);
     }
 }
