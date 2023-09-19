@@ -15,4 +15,8 @@ public class ProducerService {
     public void sendMessage(String message) {
         rabbitTemplate.convertAndSend("user-service", message);
     }
+
+    public void deleteAppointmentByUserId(String message) {
+        rabbitTemplate.convertAndSend("shop-service-user-appointment", message);
+    }
 }
