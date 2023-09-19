@@ -5,6 +5,7 @@ import com.shop.service.dto.ShopDto;
 import com.shop.service.exceptions.BadRequestException;
 import com.shop.service.exceptions.EntityNotFoundException;
 import com.shop.service.maps.ShopMapper;
+import com.shop.service.rabbit.ProducerService;
 import com.shop.service.repositories.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

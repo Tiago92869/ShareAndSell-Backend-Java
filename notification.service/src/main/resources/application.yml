@@ -9,3 +9,9 @@ spring:
       host: localhost
       port: 27017
       database: notification_service_db
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
