@@ -10,3 +10,9 @@ spring:
     keyspace-name: mykeyspace
     #local-datacenter: datacenter1
     #entity-base-package: com.example.cassandra.springbootcassandrademo.model
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
