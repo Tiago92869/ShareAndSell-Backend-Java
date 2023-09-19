@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     @Bean
-    public Queue carQueue() {
+    public Queue notificationQueue() {
         return new Queue("notification-service");
     }
 }
