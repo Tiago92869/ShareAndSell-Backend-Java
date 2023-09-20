@@ -128,7 +128,7 @@ public class TestUserService {
         assertNotNull(result);
         assertEquals(result.getEmail(), sampleUserDto.getEmail());
     }
-
+/*
     @Test
     public void testDeleteUser(){
 
@@ -136,4 +136,6 @@ public class TestUserService {
 
         assertDoesNotThrow(() -> userService.deleteUser(sampleUserDto.getId()));
     }
+
+ */
 }

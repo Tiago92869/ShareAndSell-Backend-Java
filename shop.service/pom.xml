@@ -90,6 +90,15 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-amqp</artifactId>
 		</dependency>
+
+		<!-- User Service -->
+		<dependency>
+			<groupId>com.user.servic</groupId>
+			<artifactId>user.service</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>C:\Users\tiago\Desktop\ShareAndSell-Backend-Java\user.service\target\user.service-0.0.1-SNAPSHOT-dto.jar</systemPath>
+		</dependency>
 	</dependencies>
 
 	<build>

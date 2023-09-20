@@ -113,7 +113,7 @@ public class UserService {
             throw new EntityNotFoundException("A user with that id does not exist");
         }
 
-        this.userRepository.deleteById(id);
         this.producerService.deleteAppointmentByUserId(String.valueOf(id));
+        this.userRepository.deleteById(id);
     }
 }
