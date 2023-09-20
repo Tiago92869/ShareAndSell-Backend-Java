@@ -9,7 +9,12 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     @Bean
-    public Queue carQueue() {
+    public Queue userQueue() {
         return new Queue("user-service");
+    }
+
+    @Bean
+    public Queue userQueueShopDelete() {
+        return new Queue("user-service-shop-delete");
     }
 }
