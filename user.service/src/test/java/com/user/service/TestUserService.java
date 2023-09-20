@@ -16,10 +16,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -34,17 +33,19 @@ public class TestUserService {
 
     private UserService userService;
 
+    private final List<UUID> shopIdList= List.of(UUID.fromString("77032de3-1a76-4d49-a49c-adf64ca7e05f"),
+            UUID.fromString("fbbcc1a7-b6ef-453f-890d-f459bd0da93a"));
     private final User sampleUser1 = new User(UUID.fromString("03a70a6b-c600-410f-a0bb-cd4682cc85be"),
             "trump.donald@gmail.com", "Donald Trump", LocalDate.now().minusYears(40),
-            "Braga", "Portugal", "+351958412697", true);
+            "Braga", "Portugal", "+351958412697", true, shopIdList);
 
     private final User sampleUser2 = new User(UUID.fromString("e54dba07-e880-4d6b-bb38-620eb06dd431"),
             "biden.joe@gmail.com", "Joe Biden", LocalDate.now().minusYears(24),
-            "Braga", "Portugal", "+3519741852354", false);
+            "Braga", "Portugal", "+3519741852354", false, shopIdList);
 
     private final UserDto sampleUserDto = new UserDto(UUID.fromString("03a70a6b-c600-410f-a0bb-cd4682cc85be"),
             "trump.donald@gmail.com", "Donald Trump", LocalDate.now().minusYears(40),
-            "Braga", "Portugal", "+351958412697", true);
+            "Braga", "Portugal", "+351958412697", true, shopIdList);
 
     @BeforeEach
     public void setUp() {
@@ -139,5 +140,16 @@ public class TestUserService {
         when(userRepository.findById(sampleUserDto.getId())).thenReturn(Optional.of(sampleUser1));
 
         assertDoesNotThrow(() -> userService.deleteUser(sampleUserDto.getId()));
+    }
+
+    @Test
+    public void testRemoveShopIdFromFavorites(){
+
+        when(userRepository.findByFavoritesContaining(any(UUID.class)))
+                .thenReturn(List.of(sampleUser1, sampleUser2));
+
+        userService.removeShopIdFromFavorites(shopIdList.get(0));
+
+        assertEquals(sampleUser1.getFavorites().size(), 1);
     }
 }

@@ -37,13 +37,16 @@ public class TestUserController {
     @MockBean
     private UserService userService;
 
+    private final List<UUID> shopIdList= List.of(UUID.fromString("77032de3-1a76-4d49-a49c-adf64ca7e05f"),
+            UUID.fromString("fbbcc1a7-b6ef-453f-890d-f459bd0da93a"));
+
     private final UserDto sampleUserDto1 = new UserDto(UUID.fromString("03a70a6b-c600-410f-a0bb-cd4682cc85be"),
             "trump.donald@gmail.com", "Donald Trump", LocalDate.now().minusYears(40),
-            "Braga", "Portugal", "+351958412697", true);
+            "Braga", "Portugal", "+351958412697", true, shopIdList);
 
     private final UserDto sampleUserDto2 = new UserDto(UUID.fromString("e54dba07-e880-4d6b-bb38-620eb06dd431"),
             "biden.joe@gmail.com", "Joe Biden", LocalDate.now().minusYears(24),
-            "Braga", "Portugal", "+3519741852354", false);
+            "Braga", "Portugal", "+3519741852354", false, shopIdList);
 
     private final String sampleUserJson = "{\"email\": \"trump.donald@gmail.com\"," +
             "\"fullName\": \"Donald Trump\"," +
@@ -51,7 +54,9 @@ public class TestUserController {
             "\"city\": \"Braga\"," +
             "\"country\": \"Portugal\"," +
             "\"phoneNumber\": \"351958412697\"," +
-            "\"isEnable\": true}";
+            "\"isEnable\": true," +
+            "\"favorites\": [" +
+            "\"77032de3-1a76-4d49-a49c-adf64ca7e05f\"]}";
 
 
     @Test
