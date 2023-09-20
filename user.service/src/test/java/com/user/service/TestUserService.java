@@ -3,6 +3,7 @@ package com.user.service;
 import com.user.service.domain.User;
 import com.user.service.dto.UserDto;
 import com.user.service.maps.UserMapper;
+import com.user.service.rabbit.ProducerService;
 import com.user.service.repositories.UserRepository;
 import com.user.service.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +29,9 @@ public class TestUserService {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private ProducerService producerService;
+
     private UserService userService;
 
     private final User sampleUser1 = new User(UUID.fromString("03a70a6b-c600-410f-a0bb-cd4682cc85be"),
@@ -45,7 +49,7 @@ public class TestUserService {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        userService = new UserService(userRepository, null);
+        userService = new UserService(userRepository, producerService);
     }
 
     @Test
@@ -128,7 +132,7 @@ public class TestUserService {
         assertNotNull(result);
         assertEquals(result.getEmail(), sampleUserDto.getEmail());
     }
-/*
+
     @Test
     public void testDeleteUser(){
 
@@ -136,6 +140,4 @@ public class TestUserService {
 
         assertDoesNotThrow(() -> userService.deleteUser(sampleUserDto.getId()));
     }
-
- */
 }
