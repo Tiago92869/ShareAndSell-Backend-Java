@@ -19,11 +19,15 @@ import java.util.stream.Collectors;
 public class ShopService {
 
     private final List<String> weekDaysList = Arrays.asList("MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY");
+
     private final ShopRepository shopRepository;
 
+    private final ProducerService producerService;
+
     @Autowired
-    public ShopService(ShopRepository shopRepository) {
+    public ShopService(ShopRepository shopRepository, ProducerService producerService) {
         this.shopRepository = shopRepository;
+        this.producerService = producerService;
     }
 
     public Page<ShopDto> getAllShops(Pageable pageable, List<String> weekDays, Boolean isEnable) {
@@ -140,6 +144,7 @@ public class ShopService {
         }
 
         this.shopRepository.deleteById(id);
+        this.producerService.sendMessageUserServiceShopDelete(id);
     }
 
     private void checkHours(ShopDto shopDto, Shop shop){

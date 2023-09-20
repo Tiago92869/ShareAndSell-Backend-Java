@@ -6,6 +6,7 @@ import com.user.service.exceptions.EntityNotFoundException;
 import com.user.service.maps.UserMapper;
 import com.user.service.rabbit.ProducerService;
 import com.user.service.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -104,6 +105,11 @@ public class UserService {
             user.setPhoneNumber(userDto.getPhoneNumber());
         }
 
+        if(userDto.getFavorites() != null){
+
+            user.setFavorites(userDto.getFavorites());
+        }
+
         return UserMapper.INSTANCE.userToDto(this.userRepository.save(user));
     }
 
@@ -119,6 +125,7 @@ public class UserService {
         this.userRepository.deleteById(id);
     }
 
+    @Transactional
     public void removeShopIdFromFavorites(UUID shopId){
 
         List<User> userList = this.userRepository.findByFavoritesContaining(shopId);

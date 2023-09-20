@@ -4,6 +4,7 @@ import com.shop.service.domain.Shop;
 import com.shop.service.domain.WeekDays;
 import com.shop.service.dto.ShopDto;
 import com.shop.service.maps.ShopMapper;
+import com.shop.service.rabbit.ProducerService;
 import com.shop.service.repositories.ShopRepository;
 import com.shop.service.services.ShopService;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +35,9 @@ public class TestShopService {
     @Mock
     private ShopRepository shopRepository;
 
+    @Mock
+    private ProducerService producerService;
+
     private ShopService shopService;
 
     private final Shop sampleShop1 = new Shop(UUID.fromString("1604ddbc-93f6-4a12-b497-8f0ec795e33a"), "Shop1",
@@ -54,7 +58,7 @@ public class TestShopService {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        shopService = new ShopService(shopRepository);
+        shopService = new ShopService(shopRepository, producerService);
     }
 
     @Test
