@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -47,4 +48,8 @@ public class User {
 
     @Column(name = "isEnable")
     private Boolean isEnable;
+
+    @ElementCollection
+    @Column(name = "favorites")
+    private List<UUID> favorites;
 }

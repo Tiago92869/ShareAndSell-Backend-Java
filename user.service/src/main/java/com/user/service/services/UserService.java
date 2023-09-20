@@ -11,8 +11,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -115,5 +117,19 @@ public class UserService {
 
         this.producerService.deleteAppointmentByUserId(String.valueOf(id));
         this.userRepository.deleteById(id);
+    }
+
+    public void removeShopIdFromFavorites(UUID shopId){
+
+        List<User> userList = this.userRepository.findByFavoritesContaining(shopId);
+
+        userList.forEach(user -> user.setFavorites(
+                user.getFavorites()
+                        .stream()
+                        .filter(shopInList -> !shopInList.equals(shopId))
+                        .collect(Collectors.toList())
+        ));
+
+        this.userRepository.saveAll(userList);
     }
 }
