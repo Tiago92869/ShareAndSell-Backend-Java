@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -173,11 +174,24 @@ public class TestAppointmentService {
     }
 
     @Test
-    public void deleteAppointment(){
+    public void testdeleteAppointment(){
 
         when(appointmentRepository.findById(sampleAppointmentDto.getId())).thenReturn(Optional.of(sampleAppointment1));
 
         assertDoesNotThrow(() -> appointmentService.deleteAppointment(sampleAppointment1.getId()));
     }
 
+    @Test
+    public void testDeleteAppointmentByUserId(){
+
+        List<Appointment> appointments = new ArrayList<>();
+
+        appointments.add(sampleAppointment2);
+
+        when(appointmentRepository.findByUserIdAndFutureDateTime(sampleAppointmentDto.getUserId())).thenReturn(appointments);
+
+        appointmentService.deleteAppointmentByUserId(sampleAppointmentDto.getUserId());
+
+        verify(appointmentRepository).deleteAll(appointments);
+    }
 }
