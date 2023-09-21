@@ -16,9 +16,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -79,7 +80,7 @@ public class TestUserService {
         when(userRepository.findAll(any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(sampleUser1, sampleUser2)));
 
-        Page<UserDto> result = userService.getAllUsers(PageRequest.of(0, 10), null);
+        Page<UserDto> result = userService.getAllUsers(PageRequest.of(0, 10), null, null);
 
         assertNotNull(result);
         assertEquals(2, result.getTotalElements());
@@ -91,7 +92,33 @@ public class TestUserService {
         when(userRepository.findByIsEnable(any(Pageable.class), any(Boolean.class)))
                 .thenReturn(new PageImpl<>(List.of(sampleUser1)));
 
-        Page<UserDto> result = userService.getAllUsers(PageRequest.of(0, 10), true);
+        Page<UserDto> result = userService.getAllUsers(PageRequest.of(0, 10), true, null);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+    }
+
+    @Test
+    public void testGetAllUsersSearch(){
+
+        when(userRepository.findByEmailContainingIgnoreCaseOrFullNameContainingIgnoreCase(
+                any(Pageable.class), any(String.class), any(String.class)))
+                .thenReturn(new PageImpl<>(List.of(sampleUser1)));
+
+        Page<UserDto> result = userService.getAllUsers(PageRequest.of(0, 10), null, "trump");
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+    }
+
+    @Test
+    public void testGetAllUsersTrueSearch(){
+
+        when(userRepository.findByEmailContainingIgnoreCaseAndIsEnableOrFullNameContainingIgnoreCaseAndIsEnable(
+                any(Pageable.class), any(String.class), any(Boolean.class), any(String.class), any(Boolean.class)))
+                .thenReturn(new PageImpl<>(List.of(sampleUser1)));
+
+        Page<UserDto> result = userService.getAllUsers(PageRequest.of(0, 10), true, "trump");
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());

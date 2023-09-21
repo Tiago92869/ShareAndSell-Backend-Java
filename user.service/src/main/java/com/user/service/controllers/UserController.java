@@ -30,9 +30,11 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public Page<UserDto> getAllUsers(Pageable pageable,
                                      @Parameter(description = "Filter by availability.")
-                                     @RequestParam(value = "Enable", required = false) Boolean isEnable){
+                                     @RequestParam(value = "Enable", required = false) Boolean isEnable,
+                                     @Parameter(description = "Filter by Email or FullName.")
+                                     @RequestParam(value = "Search", required = false) String search){
 
-        return this.userService.getAllUsers(pageable, isEnable);
+        return this.userService.getAllUsers(pageable, isEnable, search);
     }
 
     @GetMapping("/{id}")
