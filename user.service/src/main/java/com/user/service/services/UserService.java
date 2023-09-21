@@ -30,11 +30,23 @@ public class UserService {
         this.producerService = producerService;
     }
 
-    public Page<UserDto> getAllUsers(Pageable pageable, Boolean isEnable) {
+    public Page<UserDto> getAllUsers(Pageable pageable, Boolean isEnable, String search) {
 
-        if (isEnable != null) {
+        if (isEnable != null && search == null) {
 
             return this.userRepository.findByIsEnable(pageable, isEnable).map(UserMapper.INSTANCE::userToDto);
+        }
+
+        if(isEnable == null && search != null){
+
+            return this.userRepository.findByEmailContainingIgnoreCaseOrFullNameContainingIgnoreCase(
+                    pageable, search, search).map(UserMapper.INSTANCE::userToDto);
+        }
+
+        if(isEnable != null && search != null){
+
+            return this.userRepository.findByEmailContainingIgnoreCaseAndIsEnableOrFullNameContainingIgnoreCaseAndIsEnable(
+                    pageable, search, isEnable, search, isEnable).map(UserMapper.INSTANCE::userToDto);
         }
 
         return this.userRepository.findAll(pageable).map(UserMapper.INSTANCE::userToDto);

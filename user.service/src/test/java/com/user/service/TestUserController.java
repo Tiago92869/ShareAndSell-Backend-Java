@@ -62,7 +62,7 @@ public class TestUserController {
     @Test
     public void testGetAllUsers() throws Exception {
 
-        when(userService.getAllUsers(any(Pageable.class), eq(null)))
+        when(userService.getAllUsers(any(Pageable.class), eq(null), eq(null)))
                 .thenReturn(new PageImpl<>(List.of(sampleUserDto1, sampleUserDto2)));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/user/"))
@@ -74,11 +74,38 @@ public class TestUserController {
     @Test
     public void testGetAllUsersTrue() throws Exception {
 
-        when(userService.getAllUsers(any(Pageable.class), any(Boolean.class)))
+        when(userService.getAllUsers(any(Pageable.class), any(Boolean.class),eq(null)))
                 .thenReturn(new PageImpl<>(List.of(sampleUserDto1)));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/user/")
                         .param("Enable", String.valueOf(Boolean.TRUE)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(1)));
+    }
+
+    @Test
+    public void testGetAllUsersSearch() throws Exception {
+
+        when(userService.getAllUsers(any(Pageable.class), eq(null), any(String.class)))
+                .thenReturn(new PageImpl<>(List.of(sampleUserDto1)));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/")
+                        .param("Search", "trump"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(1)));
+    }
+
+    @Test
+    public void testGetAllUsersTrueSearch() throws Exception {
+
+        when(userService.getAllUsers(any(Pageable.class), any(Boolean.class), any(String.class)))
+                .thenReturn(new PageImpl<>(List.of(sampleUserDto1)));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/")
+                        .param("Enable", String.valueOf(Boolean.TRUE))
+                        .param("Search", "trump"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(1)));

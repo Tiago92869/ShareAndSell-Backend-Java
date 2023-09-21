@@ -14,5 +14,11 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     Page<User> findByIsEnable(Pageable pageable, Boolean isEnable);
 
+    Page<User> findByEmailContainingIgnoreCaseOrFullNameContainingIgnoreCase(
+            Pageable pageable, String email, String fullName);
+
+    Page<User> findByEmailContainingIgnoreCaseAndIsEnableOrFullNameContainingIgnoreCaseAndIsEnable(
+            Pageable pageable, String email, Boolean isEnable, String fullName, Boolean isEnable2);
+
     List<User> findByFavoritesContaining(UUID shopId);
 }
