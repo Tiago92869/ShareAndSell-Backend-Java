@@ -45,7 +45,7 @@ public class TestProductService {
     }
 
     @Test
-    public void testAppointmentToDto(){
+    public void testProductToDto(){
 
         ProductDto result = ProductMapper.INSTANCE.productToDto(sampleProduct1);
 
@@ -55,7 +55,7 @@ public class TestProductService {
     }
 
     @Test
-    public void testDtoToAppointment(){
+    public void testDtoToProduct(){
 
         Product result = ProductMapper.INSTANCE.dtoToProduct(sampleProductDto);
 
@@ -70,10 +70,22 @@ public class TestProductService {
         when(productRepository.findAll(any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(sampleProduct1, sampleProduct2)));
 
-        Page<ProductDto> result = productService.getAllProducts(PageRequest.of(0, 10));
+        Page<ProductDto> result = productService.getAllProducts(PageRequest.of(0, 10), null);
 
         assertNotNull(result);
         assertEquals(2, result.getTotalElements());
+    }
+
+    @Test
+    public void testGetAllProductsSearch(){
+
+        when(productRepository.findByDescriptionContainingIgnoreCase(any(Pageable.class), any(String.class)))
+                .thenReturn(new PageImpl<>(List.of(sampleProduct1)));
+
+        Page<ProductDto> result = productService.getAllProducts(PageRequest.of(0, 10), "apple");
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.shop.service.domain.Product;
 import com.shop.service.dto.ProductDto;
 import com.shop.service.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,9 +33,11 @@ public class ProductController {
     @GetMapping(value = "/")
     @Operation(summary = "List all products")
     @ResponseStatus(HttpStatus.OK)
-    public Page<ProductDto> getAllProducts(Pageable pageable){
+    public Page<ProductDto> getAllProducts(Pageable pageable,
+                                           @Parameter(description = "Search by shop name.")
+                                           @RequestParam(value = "Search", required = false) String search){
 
-        return this.productService.getAllProducts(pageable);
+        return this.productService.getAllProducts(pageable, search);
     }
 
     @GetMapping(value = "/{id}")
