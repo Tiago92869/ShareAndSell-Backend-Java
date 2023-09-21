@@ -2,6 +2,7 @@ package com.shop.service.services;
 
 import com.shop.service.domain.Appointment;
 import com.shop.service.domain.Shop;
+import com.shop.service.domain.Time;
 import com.shop.service.dto.AppointmentDto;
 import com.shop.service.exceptions.EntityNotFoundException;
 import com.shop.service.maps.AppointmentMapper;
@@ -12,8 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,22 +30,99 @@ public class AppointmentService {
         this.shopRepository = shopRepository;
     }
 
-    public Page<AppointmentDto> getAllAppointments(Pageable pageable, UUID shopId, UUID userId) {
+    public Page<AppointmentDto> getAllAppointments(Pageable pageable, UUID shopId, UUID userId, Time time) {
 
-        if(shopId != null && userId == null){
+        if(time == null){
 
-            return this.appointmentRepository.findByShopId(pageable, shopId).map(AppointmentMapper.INSTANCE::appointmentToDto);
+            if(shopId != null && userId == null){
 
-        }else if(shopId == null && userId != null){
+                return this.appointmentRepository.findByShopId(pageable, shopId)
+                        .map(AppointmentMapper.INSTANCE::appointmentToDto);
 
-            return this.appointmentRepository.findByUserId(pageable, userId).map(AppointmentMapper.INSTANCE::appointmentToDto);
+            }else if(shopId == null && userId != null){
 
-        }else if(shopId != null && userId != null){
+                return this.appointmentRepository.findByUserId(pageable, userId)
+                        .map(AppointmentMapper.INSTANCE::appointmentToDto);
 
-            return this.appointmentRepository.findByShopIdAndUserId(pageable, shopId, userId).map(AppointmentMapper.INSTANCE::appointmentToDto);
+            }else if(shopId != null && userId != null){
+
+                return this.appointmentRepository.findByShopIdAndUserId(pageable, shopId, userId)
+                        .map(AppointmentMapper.INSTANCE::appointmentToDto);
+
+            }else {
+
+                return this.appointmentRepository.findAll(pageable).map(AppointmentMapper.INSTANCE::appointmentToDto);
+            }
+        }else{
+
+            if(time.equals(Time.PAST)){
+
+                if(shopId != null && userId == null){
+
+                    return this.appointmentRepository.findByPastDateShop(pageable, shopId)
+                            .map(AppointmentMapper.INSTANCE::appointmentToDto);
+
+                }else if(shopId == null && userId != null){
+
+                    return this.appointmentRepository.findByPastDateUser(pageable, userId)
+                            .map(AppointmentMapper.INSTANCE::appointmentToDto);
+
+                }else if(shopId != null && userId != null){
+
+                    return this.appointmentRepository.findByPastDateShopUser(pageable, shopId, userId)
+                            .map(AppointmentMapper.INSTANCE::appointmentToDto);
+
+                }else {
+
+                    return this.appointmentRepository.findByPastDate(pageable)
+                            .map(AppointmentMapper.INSTANCE::appointmentToDto);
+                }
+            }else if(time.equals(Time.FUTURE)){
+
+                if(shopId != null && userId == null){
+
+                    return this.appointmentRepository.findByFutureDateShop(pageable, shopId)
+                            .map(AppointmentMapper.INSTANCE::appointmentToDto);
+
+                }else if(shopId == null && userId != null){
+
+                    return this.appointmentRepository.findByFutureDateUser(pageable, userId)
+                            .map(AppointmentMapper.INSTANCE::appointmentToDto);
+
+                }else if(shopId != null && userId != null){
+
+                    return this.appointmentRepository.findByFutureDateShopUser(pageable, shopId, userId)
+                            .map(AppointmentMapper.INSTANCE::appointmentToDto);
+
+                }else {
+
+                    return this.appointmentRepository.findByFutureDate(pageable)
+                            .map(AppointmentMapper.INSTANCE::appointmentToDto);
+                }
+            }else {
+
+                if(shopId != null && userId == null){
+
+                    return this.appointmentRepository.findByPresentDateShop(pageable, shopId)
+                            .map(AppointmentMapper.INSTANCE::appointmentToDto);
+
+                }else if(shopId == null && userId != null){
+
+                    return this.appointmentRepository.findByPresentDateUser(pageable, userId)
+                            .map(AppointmentMapper.INSTANCE::appointmentToDto);
+
+                }else if(shopId != null && userId != null){
+
+                    return this.appointmentRepository.findByPresentDateShopUser(pageable, shopId, userId)
+                            .map(AppointmentMapper.INSTANCE::appointmentToDto);
+
+                }else {
+
+                    return this.appointmentRepository.findByPresentDate(pageable)
+                            .map(AppointmentMapper.INSTANCE::appointmentToDto);
+                }
+            }
         }
-
-        return this.appointmentRepository.findAll(pageable).map(AppointmentMapper.INSTANCE::appointmentToDto);
     }
 
     public AppointmentDto getAppointmentById(UUID id) {
