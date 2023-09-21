@@ -87,7 +87,8 @@ public class TestShopService {
         when(shopRepository.findAll(any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(sampleShop1, sampleShop2)));
 
-        Page<ShopDto> result = shopService.getAllShops(PageRequest.of(0, 10), null, null);
+        Page<ShopDto> result = shopService.getAllShops(
+                PageRequest.of(0, 10), null, null, null);
 
         assertNotNull(result);
         assertEquals(2, result.getTotalElements());
@@ -99,7 +100,8 @@ public class TestShopService {
         when(shopRepository.findByWeekDaysIn(any(Pageable.class), eq(weekDaysList)))
                 .thenReturn(new PageImpl<>(List.of(sampleShop1)));
 
-        Page<ShopDto> result = shopService.getAllShops(PageRequest.of(0, 10), weekDayListString, null);
+        Page<ShopDto> result = shopService.getAllShops(
+                PageRequest.of(0, 10), weekDayListString, null, null);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
@@ -111,7 +113,8 @@ public class TestShopService {
         when(shopRepository.findByIsEnable(any(Pageable.class), eq(true)))
                 .thenReturn(new PageImpl<>(List.of(sampleShop1, sampleShop2)));
 
-        Page<ShopDto> result = shopService.getAllShops(PageRequest.of(0, 10), null, true);
+        Page<ShopDto> result = shopService.getAllShops(
+                PageRequest.of(0, 10), null, true, null);
 
         assertNotNull(result);
         assertEquals(2, result.getTotalElements());
@@ -123,7 +126,62 @@ public class TestShopService {
         when(shopRepository.findByWeekDaysInAndIsEnable(any(Pageable.class), eq(weekDaysList), eq(true)))
                 .thenReturn(new PageImpl<>(List.of(sampleShop1)));
 
-        Page<ShopDto> result = shopService.getAllShops(PageRequest.of(0, 10), weekDayListString, true);
+        Page<ShopDto> result = shopService.getAllShops(
+                PageRequest.of(0, 10), weekDayListString, true, null);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+    }
+
+    @Test
+    public void testGetAllShopsSearchTrue(){
+
+        when(shopRepository.findByIsEnableAndNameContainingIgnoreCase(
+                any(Pageable.class), eq(true), any(String.class))).thenReturn(new PageImpl<>(List.of(sampleShop1)));
+
+        Page<ShopDto> result = shopService.getAllShops(
+                PageRequest.of(0, 10), null, true, "Shop1");
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+    }
+
+    @Test
+    public void testGetAllShopsWeekSearchTrue(){
+
+        when(shopRepository.findByWeekDaysInAndIsEnableAndNameContainingIgnoreCase(
+                any(Pageable.class), eq(weekDaysList), eq(true), any(String.class)))
+                .thenReturn(new PageImpl<>(List.of(sampleShop1)));
+
+        Page<ShopDto> result = shopService.getAllShops(
+                PageRequest.of(0, 10), weekDayListString, true, "Shop1");
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+    }
+
+    @Test
+    public void testGetAllShopsSearch(){
+
+        when(shopRepository.findByNameContainingIgnoreCase(any(Pageable.class), any(String.class)))
+                .thenReturn(new PageImpl<>(List.of(sampleShop1)));
+
+        Page<ShopDto> result = shopService.getAllShops(
+                PageRequest.of(0, 10), null, null, "Shop1");
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+    }
+
+    @Test
+    public void testGetAllShopsWeekSearch(){
+
+        when(shopRepository.findByWeekDaysInAndNameContainingIgnoreCase(
+                any(Pageable.class), eq(weekDaysList), any(String.class)))
+                .thenReturn(new PageImpl<>(List.of(sampleShop1)));
+
+        Page<ShopDto> result = shopService.getAllShops(
+                PageRequest.of(0, 10), weekDayListString, null, "Shop1");
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
