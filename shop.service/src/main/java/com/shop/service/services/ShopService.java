@@ -30,13 +30,13 @@ public class ShopService {
         this.producerService = producerService;
     }
 
-    public Page<ShopDto> getAllShops(Pageable pageable, List<String> weekDays, Boolean isEnable) {
+    public Page<ShopDto> getAllShops(Pageable pageable, List<String> weekDays, Boolean isEnable, String search) {
 
         List<WeekDays> enumWeekDays = new ArrayList<>();
 
         if(weekDays != null){
 
-            //check if there is a invalid weekDay
+            //check if there is an invalid weekDay
             if(!new HashSet<>(this.weekDaysList).containsAll(weekDays)){
                 throw new BadRequestException("There is a element that is not a WeekDay");
             }
@@ -46,21 +46,49 @@ public class ShopService {
                     .collect(Collectors.toList());
         }
 
-        if(weekDays != null && isEnable == null){
+        if(isEnable == null){
 
-            return this.shopRepository.findByWeekDaysIn(pageable, enumWeekDays).map(ShopMapper.INSTANCE::shopToDto);
+            if(weekDays != null && search == null) {
 
-        }else if(weekDays == null && isEnable != null){
+                return this.shopRepository.findByWeekDaysIn(pageable, enumWeekDays)
+                        .map(ShopMapper.INSTANCE::shopToDto);
+            }
+            else if(weekDays == null && search != null){
 
-            return this.shopRepository.findByIsEnable(pageable, isEnable).map(ShopMapper.INSTANCE::shopToDto);
+                return this.shopRepository.findByNameContainingIgnoreCase(pageable, search)
+                        .map(ShopMapper.INSTANCE::shopToDto);
+            }
+            else if(weekDays != null && search != null){
 
-        }else if(weekDays != null && isEnable != null){
+                return this.shopRepository.findByWeekDaysInAndNameContainingIgnoreCase(pageable, enumWeekDays, search)
+                        .map(ShopMapper.INSTANCE::shopToDto);
+            }else {
 
-            return this.shopRepository.findByWeekDaysInAndIsEnable(pageable, enumWeekDays, isEnable).map(ShopMapper.INSTANCE::shopToDto);
+                return this.shopRepository.findAll(pageable).map(ShopMapper.INSTANCE::shopToDto);
+            }
 
+        }else {
+
+            if(weekDays != null && search == null) {
+
+                return this.shopRepository.findByWeekDaysInAndIsEnable(pageable, enumWeekDays, isEnable)
+                        .map(ShopMapper.INSTANCE::shopToDto);
+            }
+            else if(weekDays == null && search != null){
+
+                return this.shopRepository.findByIsEnableAndNameContainingIgnoreCase(pageable, isEnable, search)
+                        .map(ShopMapper.INSTANCE::shopToDto);
+            }
+            else if(weekDays != null && search != null){
+
+                return this.shopRepository.findByWeekDaysInAndIsEnableAndNameContainingIgnoreCase(
+                        pageable, enumWeekDays, isEnable, search).map(ShopMapper.INSTANCE::shopToDto);
+            }
+            else {
+
+                return this.shopRepository.findByIsEnable(pageable, isEnable).map(ShopMapper.INSTANCE::shopToDto);
+            }
         }
-
-        return this.shopRepository.findAll(pageable).map(ShopMapper.INSTANCE::shopToDto);
     }
 
     public ShopDto getShopById(UUID id) {

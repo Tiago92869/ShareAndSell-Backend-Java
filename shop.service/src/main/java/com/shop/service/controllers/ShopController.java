@@ -36,9 +36,11 @@ public class ShopController {
             @Parameter(description = "Filter by days of the week day (\"MONDAY\", \"TUESDAY\", \"WEDNESDAY\", \"THURSDAY\", \"FRIDAY\", \"SATURDAY\", \"SUNDAY\").")
             @RequestParam(value = "Day of the Week", required = false) List<String> weekDays,
             @Parameter(description = "Filter by availability.")
-            @RequestParam(value = "Enable", required = false) Boolean isEnable){
+            @RequestParam(value = "Enable", required = false) Boolean isEnable,
+            @Parameter(description = "Search by shop name.")
+            @RequestParam(value = "Search", required = false) String search){
 
-        return this.shopService.getAllShops(pageable, weekDays, isEnable);
+        return this.shopService.getAllShops(pageable, weekDays, isEnable, search);
     }
 
     @GetMapping(value = "/{id}")
