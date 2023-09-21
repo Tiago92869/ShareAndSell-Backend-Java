@@ -31,7 +31,13 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Page<ProductDto> getAllProducts(Pageable pageable) {
+    public Page<ProductDto> getAllProducts(Pageable pageable, String search) {
+
+        if(search != null){
+
+            return this.productRepository.findByDescriptionContainingIgnoreCase(pageable, search)
+                    .map(ProductMapper.INSTANCE::productToDto);
+        }
 
         return this.productRepository.findAll(pageable).map(ProductMapper.INSTANCE::productToDto);
     }

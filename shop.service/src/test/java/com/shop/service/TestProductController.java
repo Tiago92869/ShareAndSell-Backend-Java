@@ -22,6 +22,7 @@ import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -47,13 +48,26 @@ public class TestProductController {
     @Test
     public void testGetAllProducts() throws Exception {
 
-        when(productService.getAllProducts(any(Pageable.class)))
+        when(productService.getAllProducts(any(Pageable.class), eq(null)))
                 .thenReturn(new PageImpl<>(List.of(sampleProductDto, sampleProductDto2)));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/product/"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(2)));
+    }
+
+    @Test
+    public void testGetAllProductsSearch() throws Exception {
+
+        when(productService.getAllProducts(any(Pageable.class), eq("apple")))
+                .thenReturn(new PageImpl<>(List.of(sampleProductDto)));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/product/")
+                        .param("Search", "apple"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(1)));
     }
 
     @Test
