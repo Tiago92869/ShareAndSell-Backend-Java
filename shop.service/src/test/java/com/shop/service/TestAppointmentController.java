@@ -1,6 +1,7 @@
 package com.shop.service;
 
 import com.shop.service.controllers.AppointmentController;
+import com.shop.service.domain.Time;
 import com.shop.service.dto.AppointmentDto;
 import com.shop.service.services.AppointmentService;
 import org.junit.jupiter.api.Test;
@@ -58,7 +59,7 @@ public class TestAppointmentController {
     @Test
     public void testGetAllAppointments() throws Exception {
 
-        when(appointmentService.getAllAppointments(any(Pageable.class), eq(null), eq(null)))
+        when(appointmentService.getAllAppointments(any(Pageable.class), eq(null), eq(null), eq(null)))
                 .thenReturn(new PageImpl<>(List.of(sampleAppointmentDto, sampleAppointmentDto2)));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/appointment/"))
@@ -70,7 +71,7 @@ public class TestAppointmentController {
     @Test
     public void testGetAllAppointmentsShopId() throws Exception {
 
-        when(appointmentService.getAllAppointments(any(Pageable.class), eq(sampleAppointmentDto.getShopId()), eq(null)))
+        when(appointmentService.getAllAppointments(any(Pageable.class), eq(sampleAppointmentDto.getShopId()), eq(null), eq(null)))
                 .thenReturn(new PageImpl<>(List.of(sampleAppointmentDto)));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/appointment/")
@@ -83,7 +84,7 @@ public class TestAppointmentController {
     @Test
     public void testGetAllAppointmentsUserId() throws Exception {
 
-        when(appointmentService.getAllAppointments(any(Pageable.class), eq(null), eq(sampleAppointmentDto.getUserId())))
+        when(appointmentService.getAllAppointments(any(Pageable.class), eq(null), eq(sampleAppointmentDto.getUserId()), eq(null)))
                 .thenReturn(new PageImpl<>(List.of(sampleAppointmentDto)));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/appointment/")
@@ -96,12 +97,68 @@ public class TestAppointmentController {
     @Test
     public void testGetAllAppointmentsShopIdUserId() throws Exception {
 
-        when(appointmentService.getAllAppointments(any(Pageable.class), eq(sampleAppointmentDto.getShopId()), eq(sampleAppointmentDto.getUserId())))
+        when(appointmentService.getAllAppointments(any(Pageable.class), eq(sampleAppointmentDto.getShopId()), eq(sampleAppointmentDto.getUserId()), eq(null)))
                 .thenReturn(new PageImpl<>(List.of(sampleAppointmentDto)));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/appointment/")
                 .param("Shop Id", String.valueOf(sampleAppointmentDto.getShopId()))
                 .param("User Id", String.valueOf(sampleAppointmentDto.getUserId())))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(1)));
+    }
+
+    @Test
+    public void testGetAllAppointmentsPresent() throws Exception {
+
+        when(appointmentService.getAllAppointments(any(Pageable.class), eq(null), eq(null), any(Time.class)))
+                .thenReturn(new PageImpl<>(List.of(sampleAppointmentDto)));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/appointment/")
+                        .param("Time", String.valueOf(Time.PRESENT)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(1)));
+    }
+
+    @Test
+    public void testGetAllAppointmentsShopIdPresent() throws Exception {
+
+        when(appointmentService.getAllAppointments(any(Pageable.class), eq(sampleAppointmentDto.getShopId()), eq(null), any(Time.class)))
+                .thenReturn(new PageImpl<>(List.of(sampleAppointmentDto)));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/appointment/")
+                        .param("Shop Id", String.valueOf(sampleAppointmentDto.getShopId()))
+                        .param("Time", String.valueOf(Time.PRESENT)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(1)));
+    }
+
+    @Test
+    public void testGetAllAppointmentsUserIdPresent() throws Exception {
+
+        when(appointmentService.getAllAppointments(any(Pageable.class), eq(null), eq(sampleAppointmentDto.getUserId()), any(Time.class)))
+                .thenReturn(new PageImpl<>(List.of(sampleAppointmentDto)));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/appointment/")
+                        .param("User Id", String.valueOf(sampleAppointmentDto.getUserId()))
+                        .param("Time", String.valueOf(Time.PRESENT)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(1)));
+    }
+
+    @Test
+    public void testGetAllAppointmentsShopIdUserIdPresent() throws Exception {
+
+        when(appointmentService.getAllAppointments(any(Pageable.class), eq(sampleAppointmentDto.getShopId()), eq(sampleAppointmentDto.getUserId()), any(Time.class)))
+                .thenReturn(new PageImpl<>(List.of(sampleAppointmentDto)));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/appointment/")
+                        .param("Shop Id", String.valueOf(sampleAppointmentDto.getShopId()))
+                        .param("User Id", String.valueOf(sampleAppointmentDto.getUserId()))
+                        .param("Time", String.valueOf(Time.PRESENT)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(1)));

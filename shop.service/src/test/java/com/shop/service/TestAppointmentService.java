@@ -2,6 +2,7 @@ package com.shop.service;
 
 import com.shop.service.domain.Appointment;
 import com.shop.service.domain.Shop;
+import com.shop.service.domain.Time;
 import com.shop.service.dto.AppointmentDto;
 import com.shop.service.maps.AppointmentMapper;
 import com.shop.service.repositories.AppointmentRepository;
@@ -45,7 +46,12 @@ public class TestAppointmentService {
     private final Appointment sampleAppointment2 = new Appointment(
             UUID.fromString("0cab18a8-224d-45da-906b-51afde318207"), LocalTime.now().minusHours(1),
             LocalDate.now().minusDays(23), UUID.fromString("e643d2d2-211b-4141-ba51-867296873dda"),
-            null);
+            sampleShop);
+
+    private final Appointment sampleAppointment3 = new Appointment(
+            UUID.fromString("d352521f-c65d-4292-8be6-336494c89fdf"), LocalTime.now().minusHours(1),
+            LocalDate.now().plusDays(23), UUID.fromString("f45f9b1a-f807-4a14-a1a0-867c22222233"),
+            sampleShop);
 
     private final AppointmentDto sampleAppointmentDto = new AppointmentDto(
             UUID.fromString("bdba9df0-d55b-4fa6-b58b-6638b9f9bb93"), LocalTime.now(), LocalDate.now(),
@@ -85,7 +91,7 @@ public class TestAppointmentService {
                 .thenReturn(new PageImpl<>(List.of(sampleAppointment1, sampleAppointment2)));
 
         Page<AppointmentDto> result = appointmentService
-                .getAllAppointments(PageRequest.of(0, 10), null, null);
+                .getAllAppointments(PageRequest.of(0, 10), null, null, null);
 
         assertNotNull(result);
         assertEquals(2, result.getTotalElements());
@@ -95,13 +101,13 @@ public class TestAppointmentService {
     public void testGetAllAppointmentShopId(){
 
         when(appointmentRepository.findByShopId(any(Pageable.class), eq(sampleAppointmentDto.getShopId())))
-                .thenReturn(new PageImpl<>(List.of(sampleAppointment1)));
+                .thenReturn(new PageImpl<>(List.of(sampleAppointment1, sampleAppointment2)));
 
-        Page<AppointmentDto> result = appointmentService
-                .getAllAppointments(PageRequest.of(0, 10), sampleAppointmentDto.getShopId(), null);
+        Page<AppointmentDto> result = appointmentService.getAllAppointments(
+                PageRequest.of(0, 10), sampleAppointmentDto.getShopId(), null, null);
 
         assertNotNull(result);
-        assertEquals(1, result.getTotalElements());
+        assertEquals(2, result.getTotalElements());
     }
 
     @Test
@@ -110,8 +116,8 @@ public class TestAppointmentService {
         when(appointmentRepository.findByUserId(any(Pageable.class), eq(sampleAppointmentDto.getUserId())))
                 .thenReturn(new PageImpl<>(List.of(sampleAppointment1)));
 
-        Page<AppointmentDto> result = appointmentService
-                .getAllAppointments(PageRequest.of(0, 10), null, sampleAppointmentDto.getUserId());
+        Page<AppointmentDto> result = appointmentService.getAllAppointments(
+                PageRequest.of(0, 10), null, sampleAppointmentDto.getUserId(), null);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
@@ -125,7 +131,163 @@ public class TestAppointmentService {
 
         Page<AppointmentDto> result = appointmentService
                 .getAllAppointments(PageRequest.of(0, 10), sampleAppointmentDto.getShopId(),
-                        sampleAppointmentDto.getUserId());
+                        sampleAppointmentDto.getUserId(), null);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+    }
+    @Test
+    public void testGetAllAppointmentsPast(){
+
+        when(appointmentRepository.findByPastDate(any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(sampleAppointment2)));
+
+        Page<AppointmentDto> result = appointmentService
+                .getAllAppointments(PageRequest.of(0, 10), null, null, Time.PAST);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+    }
+
+    @Test
+    public void testGetAllAppointmentShopIdPast(){
+
+        when(appointmentRepository.findByPastDateShop(any(Pageable.class), eq(sampleAppointment2.getShop().getId())))
+                .thenReturn(new PageImpl<>(List.of(sampleAppointment2)));
+
+        Page<AppointmentDto> result = appointmentService.getAllAppointments(
+                PageRequest.of(0, 10), sampleAppointment2.getShop().getId(), null, Time.PAST);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+    }
+
+    @Test
+    public void testGetAllAppointmentUserIdPast(){
+
+        when(appointmentRepository.findByPastDateUser(any(Pageable.class), eq(sampleAppointment2.getUserId())))
+                .thenReturn(new PageImpl<>(List.of(sampleAppointment2)));
+
+        Page<AppointmentDto> result = appointmentService.getAllAppointments(
+                PageRequest.of(0, 10), null, sampleAppointment2.getUserId(), Time.PAST);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+    }
+
+    @Test
+    public void testGetAllAppointmentShopIdAndUserIdPast(){
+
+        when(appointmentRepository.findByPastDateShopUser(any(Pageable.class), eq(sampleAppointment2.getShop().getId()),
+                eq(sampleAppointment2.getUserId()))).thenReturn(new PageImpl<>(List.of(sampleAppointment2)));
+
+        Page<AppointmentDto> result = appointmentService
+                .getAllAppointments(PageRequest.of(0, 10), sampleAppointment2.getShop().getId(),
+                        sampleAppointment2.getUserId(), Time.PAST);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+    }
+    @Test
+    public void testGetAllAppointmentsFuture(){
+
+        when(appointmentRepository.findByFutureDate(any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(sampleAppointment3)));
+
+        Page<AppointmentDto> result = appointmentService.getAllAppointments(
+                PageRequest.of(0, 10), null, null, Time.FUTURE);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+    }
+
+    @Test
+    public void testGetAllAppointmentShopIdFuture(){
+
+        when(appointmentRepository.findByFutureDateShop(any(Pageable.class), eq(sampleAppointment3.getShop().getId())))
+                .thenReturn(new PageImpl<>(List.of(sampleAppointment3)));
+
+        Page<AppointmentDto> result = appointmentService.getAllAppointments(
+                PageRequest.of(0, 10), sampleAppointment3.getShop().getId(), null, Time.FUTURE);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+    }
+
+    @Test
+    public void testGetAllAppointmentUserIdFuture(){
+
+        when(appointmentRepository.findByFutureDateUser(any(Pageable.class), eq(sampleAppointment3.getUserId())))
+                .thenReturn(new PageImpl<>(List.of(sampleAppointment3)));
+
+        Page<AppointmentDto> result = appointmentService.getAllAppointments(
+                PageRequest.of(0, 10), null, sampleAppointment3.getUserId(), Time.FUTURE);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+    }
+
+    @Test
+    public void testGetAllAppointmentShopIdAndUserIdFuture(){
+
+        when(appointmentRepository.findByFutureDateShopUser(any(Pageable.class), eq(sampleAppointment3.getShop().getId()),
+                eq(sampleAppointment3.getUserId()))).thenReturn(new PageImpl<>(List.of(sampleAppointment3)));
+
+        Page<AppointmentDto> result = appointmentService
+                .getAllAppointments(PageRequest.of(0, 10), sampleAppointment3.getShop().getId(),
+                        sampleAppointment3.getUserId(), Time.FUTURE);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+    }
+    @Test
+    public void testGetAllAppointmentsPresent(){
+
+        when(appointmentRepository.findByPresentDate(any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(sampleAppointment1)));
+
+        Page<AppointmentDto> result = appointmentService.getAllAppointments(
+                PageRequest.of(0, 10), null, null, Time.PRESENT);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+    }
+
+    @Test
+    public void testGetAllAppointmentShopIdPresent(){
+
+        when(appointmentRepository.findByPresentDateShop(any(Pageable.class), eq(sampleAppointment1.getShop().getId())))
+                .thenReturn(new PageImpl<>(List.of(sampleAppointment1)));
+
+        Page<AppointmentDto> result = appointmentService.getAllAppointments(
+                PageRequest.of(0, 10), sampleAppointment1.getShop().getId(), null, Time.PRESENT);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+    }
+
+    @Test
+    public void testGetAllAppointmentUserIdPresent(){
+
+        when(appointmentRepository.findByPresentDateUser(any(Pageable.class), eq(sampleAppointment1.getUserId())))
+                .thenReturn(new PageImpl<>(List.of(sampleAppointment1)));
+
+        Page<AppointmentDto> result = appointmentService.getAllAppointments(
+                PageRequest.of(0, 10), null, sampleAppointment1.getUserId(), Time.PRESENT);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+    }
+
+    @Test
+    public void testGetAllAppointmentShopIdAndUserIdPresent(){
+
+        when(appointmentRepository.findByPresentDateShopUser(any(Pageable.class), eq(sampleAppointment1.getShop().getId()),
+                eq(sampleAppointment1.getUserId()))).thenReturn(new PageImpl<>(List.of(sampleAppointment1)));
+
+        Page<AppointmentDto> result = appointmentService
+                .getAllAppointments(PageRequest.of(0, 10), sampleAppointment1.getShop().getId(),
+                        sampleAppointment1.getUserId(), Time.PRESENT);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());

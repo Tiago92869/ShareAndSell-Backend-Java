@@ -1,5 +1,6 @@
 package com.shop.service.controllers;
 
+import com.shop.service.domain.Time;
 import com.shop.service.dto.AppointmentDto;
 import com.shop.service.services.AppointmentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,9 +34,11 @@ public class AppointmentController {
             @Parameter(description = "Filter by shop id.")
             @RequestParam(value = "Shop Id", required = false) UUID shopId,
             @Parameter(description = "Filter by current user id.")
-            @RequestParam(value = "User Id", required = false) UUID userId){
+            @RequestParam(value = "User Id", required = false) UUID userId,
+            @Parameter(description = "Filter by Time (PAST/PRESENT/FUTURE.")
+            @RequestParam(value = "Time", required = false) Time time){
 
-        return this.appointmentService.getAllAppointments(pageable, shopId, userId);
+        return this.appointmentService.getAllAppointments(pageable, shopId, userId, time);
     }
 
     @GetMapping(value = "/{id}")
