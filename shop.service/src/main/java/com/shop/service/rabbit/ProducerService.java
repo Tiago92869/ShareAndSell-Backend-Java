@@ -10,7 +10,7 @@ import java.util.UUID;
 @Service
 public class ProducerService {
 
-    private String userDefault = "User-Service: ";
+    private String shopDefault = "Shop-Service: ";
     private final RabbitTemplate rabbitTemplate;
 
     public ProducerService(RabbitTemplate rabbitTemplate) {
@@ -29,7 +29,7 @@ public class ProducerService {
     public void sendMessageLogService(String message, String userId){
         MessageProperties properties = new MessageProperties();
         properties.setHeader("UserId", userId);
-        properties.setHeader("Content", message);
+        properties.setHeader("Content", shopDefault + message);
         Message msg = new Message(userId.getBytes(), properties);
         rabbitTemplate.send("logs-service-create", msg);
     }
