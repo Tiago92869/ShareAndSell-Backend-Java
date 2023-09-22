@@ -3,6 +3,7 @@ package com.shop.service;
 import com.shop.service.domain.Product;
 import com.shop.service.dto.ProductDto;
 import com.shop.service.maps.ProductMapper;
+import com.shop.service.rabbit.ProducerService;
 import com.shop.service.repositories.ProductRepository;
 import com.shop.service.services.ProductService;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +28,9 @@ public class TestProductService {
     @Mock
     private ProductRepository productRepository;
 
+    @Mock
+    private ProducerService producerService;
+
     private ProductService productService;
 
     private final Product sampleProduct1 = new Product(UUID.fromString("a9c6998f-e346-4fee-a451-8290bef086fd"),
@@ -41,7 +45,7 @@ public class TestProductService {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        productService = new ProductService(productRepository);
+        productService = new ProductService(productRepository, producerService);
     }
 
     @Test

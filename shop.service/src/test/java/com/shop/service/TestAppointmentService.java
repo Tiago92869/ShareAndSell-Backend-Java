@@ -5,6 +5,7 @@ import com.shop.service.domain.Shop;
 import com.shop.service.domain.Time;
 import com.shop.service.dto.AppointmentDto;
 import com.shop.service.maps.AppointmentMapper;
+import com.shop.service.rabbit.ProducerService;
 import com.shop.service.repositories.AppointmentRepository;
 import com.shop.service.repositories.ShopRepository;
 import com.shop.service.services.AppointmentService;
@@ -37,6 +38,9 @@ public class TestAppointmentService {
     @Mock
     private ShopRepository shopRepository;
 
+    @Mock
+    private ProducerService producerService;
+
     private final Shop sampleShop = new Shop(UUID.fromString("f085f23a-d370-4ae8-9b14-74e8077df5ff"));
 
     private final Appointment sampleAppointment1 = new Appointment(
@@ -61,7 +65,7 @@ public class TestAppointmentService {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        appointmentService = new AppointmentService(appointmentRepository, shopRepository);
+        appointmentService = new AppointmentService(appointmentRepository, shopRepository, producerService);
     }
 
     @Test

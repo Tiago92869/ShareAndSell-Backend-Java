@@ -6,6 +6,7 @@ import com.shop.service.domain.Time;
 import com.shop.service.dto.AppointmentDto;
 import com.shop.service.exceptions.EntityNotFoundException;
 import com.shop.service.maps.AppointmentMapper;
+import com.shop.service.rabbit.ProducerService;
 import com.shop.service.repositories.AppointmentRepository;
 import com.shop.service.repositories.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +25,18 @@ public class AppointmentService {
 
     private final ShopRepository shopRepository;
 
+    private final ProducerService producerService;
+
     @Autowired
-    public AppointmentService(AppointmentRepository appointmentRepository, ShopRepository shopRepository) {
+    public AppointmentService(AppointmentRepository appointmentRepository, ShopRepository shopRepository, ProducerService producerService) {
         this.appointmentRepository = appointmentRepository;
         this.shopRepository = shopRepository;
+        this.producerService = producerService;
     }
 
     public Page<AppointmentDto> getAllAppointments(Pageable pageable, UUID shopId, UUID userId, Time time) {
+
+        this.producerService.sendMessageLogService("Get all Appointments", "45fbf752-1e87-4086-93d3-44e637c26a96");
 
         if(time == null){
 
@@ -133,6 +139,7 @@ public class AppointmentService {
             throw new EntityNotFoundException("A Appointment with that id does not exist");
         }
 
+        this.producerService.sendMessageLogService("Get Appointment By Id", "45fbf752-1e87-4086-93d3-44e637c26a96");
         return AppointmentMapper.INSTANCE.appointmentToDto(maybeAppointment.get());
     }
 
@@ -149,6 +156,7 @@ public class AppointmentService {
         Appointment appointment = AppointmentMapper.INSTANCE.dtoToAppointment(appointmentDto);
         appointment.setShop(optionalShop.get());
 
+        this.producerService.sendMessageLogService("Create Appointment", "45fbf752-1e87-4086-93d3-44e637c26a96");
         return AppointmentMapper.INSTANCE.appointmentToDto(this.appointmentRepository.save(appointment));
     }
 
@@ -185,6 +193,7 @@ public class AppointmentService {
             appointment.setShop(optionalShop.get());
         }
 
+        this.producerService.sendMessageLogService("Update Appointment", "45fbf752-1e87-4086-93d3-44e637c26a96");
         return AppointmentMapper.INSTANCE.appointmentToDto(this.appointmentRepository.save(appointment));
     }
 
@@ -196,6 +205,7 @@ public class AppointmentService {
             throw new EntityNotFoundException("A Appointment with that id does not exist");
         }
 
+        this.producerService.sendMessageLogService("Delete Appointment", "45fbf752-1e87-4086-93d3-44e637c26a96");
         this.appointmentRepository.deleteById(id);
     }
 
@@ -203,6 +213,7 @@ public class AppointmentService {
 
         List<Appointment> appointmentList = this.appointmentRepository.findByUserIdAndFutureDateTime(userId);
 
+        this.producerService.sendMessageLogService("Delete Appointments by User Id", "45fbf752-1e87-4086-93d3-44e637c26a96");
         this.appointmentRepository.deleteAll(appointmentList);
     }
 }

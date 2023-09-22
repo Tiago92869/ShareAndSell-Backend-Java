@@ -4,6 +4,7 @@ import com.shop.service.domain.Rating;
 import com.shop.service.domain.Shop;
 import com.shop.service.dto.RatingDto;
 import com.shop.service.maps.RatingMapper;
+import com.shop.service.rabbit.ProducerService;
 import com.shop.service.repositories.RatingRepository;
 import com.shop.service.repositories.ShopRepository;
 import com.shop.service.services.RatingService;
@@ -34,6 +35,9 @@ public class TestRatingService {
     @Mock
     private ShopRepository shopRepository;
 
+    @Mock
+    private ProducerService producerService;
+
     private final Shop sampleShop = new Shop(UUID.fromString("f085f23a-d370-4ae8-9b14-74e8077df5ff"));
 
     private final Rating sampleRating1 = new Rating(UUID.fromString("89d3c769-8f45-41fb-b9dc-e62796f29ff1"),
@@ -52,7 +56,7 @@ public class TestRatingService {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        ratingService = new RatingService(ratingRepository, shopRepository);
+        ratingService = new RatingService(ratingRepository, shopRepository, producerService);
     }
 
     @Test
