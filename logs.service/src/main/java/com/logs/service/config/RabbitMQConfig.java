@@ -9,7 +9,12 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     @Bean
-    public Queue carQueue() {
+    public Queue logQueue() {
         return new Queue("logs-service");
+    }
+
+    @Bean
+    public Queue logQueueCreate() {
+        return new Queue("logs-service-create");
     }
 }

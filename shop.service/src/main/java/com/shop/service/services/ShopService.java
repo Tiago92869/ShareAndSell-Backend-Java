@@ -63,7 +63,7 @@ public class ShopService {
                 return this.shopRepository.findByWeekDaysInAndNameContainingIgnoreCase(pageable, enumWeekDays, search)
                         .map(ShopMapper.INSTANCE::shopToDto);
             }else {
-
+                this.producerService.sendMessageLogService("GET ALL USERS", "45fbf752-1e87-4086-93d3-44e637c26a96");
                 return this.shopRepository.findAll(pageable).map(ShopMapper.INSTANCE::shopToDto);
             }
 

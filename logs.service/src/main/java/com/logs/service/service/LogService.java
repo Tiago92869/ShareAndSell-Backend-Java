@@ -8,6 +8,7 @@ import com.logs.service.repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -47,6 +48,7 @@ public class LogService {
     public LogDto createLog(LogDto logDto) {
 
         logDto.setId(UUID.randomUUID());
+        logDto.setTimeStamp(LocalDateTime.now());
 
         Log log = LogMapper.INSTANCE.dtoToLog(logDto);
 
