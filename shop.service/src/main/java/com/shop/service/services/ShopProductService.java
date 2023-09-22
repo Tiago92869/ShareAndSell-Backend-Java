@@ -4,8 +4,8 @@ import com.shop.service.domain.Shop;
 import com.shop.service.domain.ShopProduct;
 import com.shop.service.dto.ShopProductDto;
 import com.shop.service.exceptions.EntityNotFoundException;
-import com.shop.service.maps.AppointmentMapper;
 import com.shop.service.maps.ShopProductMapper;
+import com.shop.service.rabbit.ProducerService;
 import com.shop.service.repositories.ProductRepository;
 import com.shop.service.repositories.ShopProductRepository;
 import com.shop.service.repositories.ShopRepository;
@@ -26,14 +26,19 @@ public class ShopProductService {
 
     private final ShopRepository shopRepository;
 
+    private final ProducerService producerService;
+
     @Autowired
-    public ShopProductService(ShopProductRepository shopProductRepository, ProductRepository productRepository, ShopRepository shopRepository) {
+    public ShopProductService(ShopProductRepository shopProductRepository, ProductRepository productRepository, ShopRepository shopRepository, ProducerService producerService) {
         this.shopProductRepository = shopProductRepository;
         this.productRepository = productRepository;
         this.shopRepository = shopRepository;
+        this.producerService = producerService;
     }
 
     public Page<ShopProductDto> getAllShopProducts(Pageable pageable, UUID shopId, UUID productId, Boolean isEnable) {
+
+        this.producerService.sendMessageLogService("Get all Shop Products", "45fbf752-1e87-4086-93d3-44e637c26a96");
 
         if(isEnable != null){
 
@@ -77,6 +82,7 @@ public class ShopProductService {
             throw new EntityNotFoundException("A ShopProduct with that id does not exist");
         }
 
+        this.producerService.sendMessageLogService("Get Shop Product by Id", "45fbf752-1e87-4086-93d3-44e637c26a96");
         return ShopProductMapper.INSTANCE.shopProductToDto(optionalShopProduct.get());
     }
 
@@ -100,6 +106,7 @@ public class ShopProductService {
         shopProduct.setProduct(optionalProduct.get());
         shopProduct.setShop(optionalShop.get());
 
+        this.producerService.sendMessageLogService("Create Shop Product", "45fbf752-1e87-4086-93d3-44e637c26a96");
         return ShopProductMapper.INSTANCE.shopProductToDto(this.shopProductRepository.save(shopProduct));
     }
 
@@ -140,6 +147,7 @@ public class ShopProductService {
             shopProduct.setIsEnable(shopProductDto.getIsEnable());
         }
 
+        this.producerService.sendMessageLogService("Update Shop Product", "45fbf752-1e87-4086-93d3-44e637c26a96");
         return ShopProductMapper.INSTANCE.shopProductToDto(this.shopProductRepository.save(shopProduct));
     }
 
@@ -151,6 +159,7 @@ public class ShopProductService {
             throw new EntityNotFoundException("A ShopProduct with that id does not exist");
         }
 
+        this.producerService.sendMessageLogService("Delete Shop Product", "45fbf752-1e87-4086-93d3-44e637c26a96");
         this.shopProductRepository.deleteById(id);
     }
 }

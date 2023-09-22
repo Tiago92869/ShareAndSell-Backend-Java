@@ -5,6 +5,7 @@ import com.shop.service.domain.Shop;
 import com.shop.service.dto.RatingDto;
 import com.shop.service.exceptions.EntityNotFoundException;
 import com.shop.service.maps.RatingMapper;
+import com.shop.service.rabbit.ProducerService;
 import com.shop.service.repositories.RatingRepository;
 import com.shop.service.repositories.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,18 @@ public class RatingService {
 
     private final ShopRepository shopRepository;
 
+    private final ProducerService producerService;
+
     @Autowired
-    public RatingService(RatingRepository ratingRepository, ShopRepository shopRepository) {
+    public RatingService(RatingRepository ratingRepository, ShopRepository shopRepository, ProducerService producerService) {
         this.ratingRepository = ratingRepository;
         this.shopRepository = shopRepository;
+        this.producerService = producerService;
     }
 
     public Page<RatingDto> getAllRatings(Pageable pageable, UUID shopId, UUID userId) {
+
+        this.producerService.sendMessageLogService("Get all Ratings", "45fbf752-1e87-4086-93d3-44e637c26a96");
 
         if(shopId != null && userId == null){
 
@@ -55,6 +61,7 @@ public class RatingService {
             throw new EntityNotFoundException("A Rating with that id does not exist");
         }
 
+        this.producerService.sendMessageLogService("Get Rating by Id", "45fbf752-1e87-4086-93d3-44e637c26a96");
         return RatingMapper.INSTANCE.ratingToDto(maybeRating.get());
     }
 
@@ -75,6 +82,7 @@ public class RatingService {
 
         this.setRateForShop(rating.getShop().getId());
 
+        this.producerService.sendMessageLogService("Create Rating", "45fbf752-1e87-4086-93d3-44e637c26a96");
         return finalRating;
     }
 
@@ -111,6 +119,7 @@ public class RatingService {
 
         this.setRateForShop(rating.getShop().getId());
 
+        this.producerService.sendMessageLogService("Update Rating", "45fbf752-1e87-4086-93d3-44e637c26a96");
         return finalRating;
     }
 
@@ -122,6 +131,7 @@ public class RatingService {
             throw new EntityNotFoundException("A Rating with that id does not exist");
         }
 
+        this.producerService.sendMessageLogService("Delete Rating", "45fbf752-1e87-4086-93d3-44e637c26a96");
         this.ratingRepository.deleteById(id);
     }
 

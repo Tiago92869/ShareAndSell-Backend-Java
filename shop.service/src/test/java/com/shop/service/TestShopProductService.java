@@ -5,6 +5,7 @@ import com.shop.service.domain.Shop;
 import com.shop.service.domain.ShopProduct;
 import com.shop.service.dto.ShopProductDto;
 import com.shop.service.maps.ShopProductMapper;
+import com.shop.service.rabbit.ProducerService;
 import com.shop.service.repositories.ProductRepository;
 import com.shop.service.repositories.ShopProductRepository;
 import com.shop.service.repositories.ShopRepository;
@@ -40,6 +41,9 @@ public class TestShopProductService {
     @Mock
     private ProductRepository productRepository;
 
+    @Mock
+    private ProducerService producerService;
+
     private final Shop sampleShop = new Shop(UUID.fromString("f085f23a-d370-4ae8-9b14-74e8077df5ff"));
 
     private final Product sampleProduct = new Product(UUID.fromString("a9c6998f-e346-4fee-a451-8290bef086fd"),
@@ -60,7 +64,7 @@ public class TestShopProductService {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        shopProductService = new ShopProductService(shopProductRepository, productRepository, shopRepository);
+        shopProductService = new ShopProductService(shopProductRepository, productRepository, shopRepository, producerService);
     }
 
     @Test
