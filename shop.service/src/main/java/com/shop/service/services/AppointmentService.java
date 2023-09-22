@@ -139,7 +139,7 @@ public class AppointmentService {
             throw new EntityNotFoundException("A Appointment with that id does not exist");
         }
 
-        this.producerService.sendMessageLogService("Get Appointment By Id", "45fbf752-1e87-4086-93d3-44e637c26a96");
+        this.producerService.sendMessageLogService("Get Appointment with Id " + id, "45fbf752-1e87-4086-93d3-44e637c26a96");
         return AppointmentMapper.INSTANCE.appointmentToDto(maybeAppointment.get());
     }
 
@@ -156,7 +156,7 @@ public class AppointmentService {
         Appointment appointment = AppointmentMapper.INSTANCE.dtoToAppointment(appointmentDto);
         appointment.setShop(optionalShop.get());
 
-        this.producerService.sendMessageLogService("Create Appointment", "45fbf752-1e87-4086-93d3-44e637c26a96");
+        this.producerService.sendMessageLogService("Create Appointment with Id " + appointment.getId(), "45fbf752-1e87-4086-93d3-44e637c26a96");
         return AppointmentMapper.INSTANCE.appointmentToDto(this.appointmentRepository.save(appointment));
     }
 
@@ -193,7 +193,7 @@ public class AppointmentService {
             appointment.setShop(optionalShop.get());
         }
 
-        this.producerService.sendMessageLogService("Update Appointment", "45fbf752-1e87-4086-93d3-44e637c26a96");
+        this.producerService.sendMessageLogService("Update Appointment with Id " + appointment.getId(), "45fbf752-1e87-4086-93d3-44e637c26a96");
         return AppointmentMapper.INSTANCE.appointmentToDto(this.appointmentRepository.save(appointment));
     }
 
@@ -205,7 +205,7 @@ public class AppointmentService {
             throw new EntityNotFoundException("A Appointment with that id does not exist");
         }
 
-        this.producerService.sendMessageLogService("Delete Appointment", "45fbf752-1e87-4086-93d3-44e637c26a96");
+        this.producerService.sendMessageLogService("Delete Appointment with Id " + id, "45fbf752-1e87-4086-93d3-44e637c26a96");
         this.appointmentRepository.deleteById(id);
     }
 
@@ -213,7 +213,7 @@ public class AppointmentService {
 
         List<Appointment> appointmentList = this.appointmentRepository.findByUserIdAndFutureDateTime(userId);
 
-        this.producerService.sendMessageLogService("Delete Appointments by User Id", "45fbf752-1e87-4086-93d3-44e637c26a96");
+        this.producerService.sendMessageLogService("Delete Appointments by UserId with UserId " + userId, "45fbf752-1e87-4086-93d3-44e637c26a96");
         this.appointmentRepository.deleteAll(appointmentList);
     }
 }

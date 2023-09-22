@@ -58,7 +58,7 @@ public class ProductService {
             throw new EntityNotFoundException("A Product with that id does not exist");
         }
 
-        this.producerService.sendMessageLogService("Get Product by Id", "45fbf752-1e87-4086-93d3-44e637c26a96");
+        this.producerService.sendMessageLogService("Get Product with Id " + id, "45fbf752-1e87-4086-93d3-44e637c26a96");
         return ProductMapper.INSTANCE.productToDto(maybeOptional.get());
     }
 
@@ -72,7 +72,7 @@ public class ProductService {
         productDto.setId(UUID.randomUUID());
         Product product = ProductMapper.INSTANCE.dtoToProduct(productDto);
 
-        this.producerService.sendMessageLogService("Create Product", "45fbf752-1e87-4086-93d3-44e637c26a96");
+        this.producerService.sendMessageLogService("Create Product with Id " + product.getId(), "45fbf752-1e87-4086-93d3-44e637c26a96");
         return ProductMapper.INSTANCE.productToDto(this.productRepository.save(product));
     }
 
@@ -93,7 +93,7 @@ public class ProductService {
             product.setDescription(productDto.getDescription());
         }
 
-        this.producerService.sendMessageLogService("Update Product", "45fbf752-1e87-4086-93d3-44e637c26a96");
+        this.producerService.sendMessageLogService("Update Product with Id " + product.getId(), "45fbf752-1e87-4086-93d3-44e637c26a96");
         return ProductMapper.INSTANCE.productToDto(this.productRepository.save(product));
     }
 
@@ -108,7 +108,7 @@ public class ProductService {
 
         Product product = maybeOptional.get();
 
-        this.producerService.sendMessageLogService("Get Product Image by id", "45fbf752-1e87-4086-93d3-44e637c26a96");
+        this.producerService.sendMessageLogService("Get Product Image with Id " + id, "45fbf752-1e87-4086-93d3-44e637c26a96");
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.valueOf(product.getType()))
                 .body(ImageUtil.decompressImage(maybeOptional.get().getPhoto()));
@@ -142,7 +142,7 @@ public class ProductService {
             product.setPhoto(ImageUtil.compressImage(file.getBytes()));
 
             this.productRepository.save(product);
-            this.producerService.sendMessageLogService("Upload Product Image", "45fbf752-1e87-4086-93d3-44e637c26a96");
+            this.producerService.sendMessageLogService("Upload Product Image with Id " + product.getId(), "45fbf752-1e87-4086-93d3-44e637c26a96");
         }
         catch (Exception e){
             throw new BadRequestException("Something went wrong when uploading the image " + e.getMessage());
@@ -158,7 +158,7 @@ public class ProductService {
             throw new EntityNotFoundException("A Product with that id does not exist");
         }
 
-        this.producerService.sendMessageLogService("Delete Product", "45fbf752-1e87-4086-93d3-44e637c26a96");
+        this.producerService.sendMessageLogService("Delete Product with Id " + id, "45fbf752-1e87-4086-93d3-44e637c26a96");
         this.productRepository.deleteById(id);
     }
 }
