@@ -3,6 +3,7 @@ package com.notification.service;
 import com.notification.service.domain.Notification;
 import com.notification.service.dto.NotificationDto;
 import com.notification.service.mapper.NotificationMapper;
+import com.notification.service.rabbit.ProducerService;
 import com.notification.service.repository.NotificationRepository;
 import com.notification.service.service.NotificationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +29,9 @@ public class TestNotificationService {
     @Mock
     private NotificationRepository notificationRepository;
 
+    @Mock
+    private ProducerService producerService;
+
     private NotificationService notificationService;
 
     private final Notification sampleNotification = new Notification(UUID.fromString("fd2a2b95-518f-45c6-8985-c599fc4cfc19"),
@@ -43,7 +47,7 @@ public class TestNotificationService {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        notificationService = new NotificationService(notificationRepository);
+        notificationService = new NotificationService(notificationRepository, producerService);
     }
 
     @Test

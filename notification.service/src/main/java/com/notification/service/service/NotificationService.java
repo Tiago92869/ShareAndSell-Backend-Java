@@ -4,6 +4,7 @@ import com.notification.service.domain.Notification;
 import com.notification.service.dto.NotificationDto;
 import com.notification.service.exceptions.EntityNotFoundException;
 import com.notification.service.mapper.NotificationMapper;
+import com.notification.service.rabbit.ProducerService;
 import com.notification.service.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,13 +20,17 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
 
+    private final ProducerService producerService;
+
     @Autowired
-    public NotificationService(NotificationRepository notificationRepository) {
+    public NotificationService(NotificationRepository notificationRepository, ProducerService producerService) {
         this.notificationRepository = notificationRepository;
+        this.producerService = producerService;
     }
 
     public Page<NotificationDto> getAllNotifications(Pageable pageable) {
 
+        this.producerService.sendMessageLogService("Get All Notifications", "45fbf752-1e87-4086-93d3-44e637c26a96");
         return this.notificationRepository.findAll(pageable).map(NotificationMapper.INSTANCE::notificationToDto);
     }
 
@@ -37,6 +42,7 @@ public class NotificationService {
             throw new EntityNotFoundException("A notification with that id does not exist");
         }
 
+        this.producerService.sendMessageLogService("Get Notification with Id " + id, "45fbf752-1e87-4086-93d3-44e637c26a96");
         return NotificationMapper.INSTANCE.notificationToDto(optional.get());
     }
 
@@ -47,6 +53,7 @@ public class NotificationService {
 
         Notification notification = NotificationMapper.INSTANCE.dtoToNotification(notificationDto);
 
+        this.producerService.sendMessageLogService("Create Notification with Id " + notificationDto.getId(), "45fbf752-1e87-4086-93d3-44e637c26a96");
         return NotificationMapper.INSTANCE.notificationToDto(
                 this.notificationRepository.save(notification));
     }
@@ -71,6 +78,7 @@ public class NotificationService {
             notification.setTitle(notificationDto.getTitle());
         }
 
+        this.producerService.sendMessageLogService("Update Notification with Id " + notification.getId(), "45fbf752-1e87-4086-93d3-44e637c26a96");
         return NotificationMapper.INSTANCE.notificationToDto(this.notificationRepository.save(notification));
     }
 
@@ -82,6 +90,7 @@ public class NotificationService {
             throw new EntityNotFoundException("A notification with that id does not exist");
         }
 
+        this.producerService.sendMessageLogService("Delete Notification with Id " + id, "45fbf752-1e87-4086-93d3-44e637c26a96");
         this.notificationRepository.deleteById(id);
     }
 }
