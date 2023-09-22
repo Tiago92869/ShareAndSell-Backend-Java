@@ -4,11 +4,19 @@ server:
     contextPath: /api/shop-service
 
 spring:
+  cloud:
+    config:
+      import-check:
+        enabled: false
+  application:
+    name: shop-service
+
   datasource:
     url: jdbc:postgresql://localhost:5430/shopdb
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
       ddl-auto: update

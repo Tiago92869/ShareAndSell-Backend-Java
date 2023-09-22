@@ -1,0 +1,30 @@
+server:
+  port: 3034
+
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      routes:
+        - id: shop-service
+          uri: ${rewrite.backend.uri:http://localhost:3030}
+          predicates:
+            - Path=/api/shop-service/**
+        - id: user-service
+          uri: ${rewrite.backend.uri:http://localhost:3033}
+          predicates:
+            - Path=/api/user-service/**
+
+springdoc:
+  api-docs:
+    path: /api/v3/api-docs
+  swagger-ui:
+    path: /api/swagger-ui.html
+    urls:
+      - name: shop-service
+        url: /api/shop-service/v3/api-docs
+      - name: user-service
+        url: /api/user-service/v3/api-docs
