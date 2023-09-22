@@ -1,9 +1,16 @@
 server:
-  port: 3034
+  port: 3033
   servlet:
     contextPath: /api/user-service
 
 spring:
+  cloud:
+    config:
+      import-check:
+        enabled: false
+  application:
+    name: user-service
+
   datasource:
     url: jdbc:postgresql://localhost:5430/userdb
     username: postgres
