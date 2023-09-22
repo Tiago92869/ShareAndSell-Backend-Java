@@ -61,7 +61,7 @@ public class UserService {
             throw new EntityNotFoundException("A user with that id does not exist");
         }
 
-        this.producerService.sendMessageLogService("Get User by Id", "45fbf752-1e87-4086-93d3-44e637c26a96");
+        this.producerService.sendMessageLogService("Get User with Id " + id, "45fbf752-1e87-4086-93d3-44e637c26a96");
         return UserMapper.INSTANCE.userToDto(optionalUser.get());
     }
 
@@ -71,7 +71,7 @@ public class UserService {
 
         User user = UserMapper.INSTANCE.dtoToUser(userDto);
 
-        this.producerService.sendMessageLogService("Create User", "45fbf752-1e87-4086-93d3-44e637c26a96");
+        this.producerService.sendMessageLogService("Create User with Id " + user.getId(), "45fbf752-1e87-4086-93d3-44e637c26a96");
         return UserMapper.INSTANCE.userToDto(this.userRepository.save(user));
     }
 
@@ -125,7 +125,7 @@ public class UserService {
             user.setFavorites(userDto.getFavorites());
         }
 
-        this.producerService.sendMessageLogService("Update User", "45fbf752-1e87-4086-93d3-44e637c26a96");
+        this.producerService.sendMessageLogService("Update User with Id " + user.getId(), "45fbf752-1e87-4086-93d3-44e637c26a96");
         return UserMapper.INSTANCE.userToDto(this.userRepository.save(user));
     }
 
@@ -138,7 +138,7 @@ public class UserService {
         }
 
         this.producerService.deleteAppointmentByUserId(String.valueOf(id));
-        this.producerService.sendMessageLogService("Delete User", "45fbf752-1e87-4086-93d3-44e637c26a96");
+        this.producerService.sendMessageLogService("Delete User with Id " + id, "45fbf752-1e87-4086-93d3-44e637c26a96");
         this.userRepository.deleteById(id);
     }
 
@@ -154,7 +154,7 @@ public class UserService {
                         .collect(Collectors.toList())
         ));
 
-        this.producerService.sendMessageLogService("Remove ShopId from favorites", "45fbf752-1e87-4086-93d3-44e637c26a96");
+        this.producerService.sendMessageLogService("Remove ShopId from favorites with the shopId " + shopId, "45fbf752-1e87-4086-93d3-44e637c26a96");
         this.userRepository.saveAll(userList);
     }
 }
