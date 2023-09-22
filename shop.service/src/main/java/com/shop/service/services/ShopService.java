@@ -100,7 +100,7 @@ public class ShopService {
             throw new EntityNotFoundException("A Shop with that id does not exist");
         }
 
-        this.producerService.sendMessageLogService("Get Shop by Id", "45fbf752-1e87-4086-93d3-44e637c26a96");
+        this.producerService.sendMessageLogService("Get Shop with Id " + id, "45fbf752-1e87-4086-93d3-44e637c26a96");
         return ShopMapper.INSTANCE.shopToDto(maybeOptional.get());
     }
 
@@ -117,7 +117,7 @@ public class ShopService {
             }
         }
 
-        this.producerService.sendMessageLogService("Create Shop", "45fbf752-1e87-4086-93d3-44e637c26a96");
+        this.producerService.sendMessageLogService("Create Shop with Id" + shopDto.getId(), "45fbf752-1e87-4086-93d3-44e637c26a96");
         return ShopMapper.INSTANCE.shopToDto(
                 this.shopRepository.save(ShopMapper.INSTANCE.dtoToShop(shopDto)));
     }
@@ -163,7 +163,7 @@ public class ShopService {
         //check hours
         this.checkHours(shopDto, shop);
 
-        this.producerService.sendMessageLogService("Update Shop", "45fbf752-1e87-4086-93d3-44e637c26a96");
+        this.producerService.sendMessageLogService("Update Shop with Id " + shop.getId(), "45fbf752-1e87-4086-93d3-44e637c26a96");
         return ShopMapper.INSTANCE.shopToDto(this.shopRepository.save(shop));
     }
 
@@ -176,7 +176,7 @@ public class ShopService {
         }
 
         this.shopRepository.deleteById(id);
-        this.producerService.sendMessageLogService("Delete Shop", "45fbf752-1e87-4086-93d3-44e637c26a96");
+        this.producerService.sendMessageLogService("Delete Shop with Id " + id, "45fbf752-1e87-4086-93d3-44e637c26a96");
         this.producerService.sendMessageUserServiceShopDelete(id);
     }
 
