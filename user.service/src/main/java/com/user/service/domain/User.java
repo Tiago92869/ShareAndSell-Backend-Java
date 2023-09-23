@@ -52,4 +52,7 @@ public class User {
     @ElementCollection
     @Column(name = "favorites")
     private List<UUID> favorites;
+
+    @Column(name = "password")
+    private String password;
 }

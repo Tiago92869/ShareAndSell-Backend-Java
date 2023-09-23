@@ -1,5 +1,6 @@
 package com.user.service.maps;
 
+
 import com.user.service.domain.User;
 import com.user.service.dto.UserDto;
 import org.mapstruct.Mapper;
@@ -13,4 +14,5 @@ public interface UserMapper {
     UserDto userToDto(User user);
 
     User dtoToUser(UserDto userDto);
+
 }

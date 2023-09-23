@@ -2,6 +2,7 @@ package com.user.service.services;
 
 import com.user.service.domain.User;
 import com.user.service.dto.UserDto;
+import com.user.service.exceptions.BadRequestException;
 import com.user.service.exceptions.EntityNotFoundException;
 import com.user.service.maps.UserMapper;
 import com.user.service.rabbit.ProducerService;
@@ -10,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -67,7 +69,16 @@ public class UserService {
 
     public UserDto createUser(UserDto userDto) {
 
+        if(userDto.getEmail() == null || userDto.getPassword() == null){
+
+            throw new BadRequestException("Email and Password are needed to complete the creation of user");
+        }
+
         userDto.setId(UUID.randomUUID());
+
+        //hash the password
+        String hashPassword = new BCryptPasswordEncoder().encode(userDto.getPassword());
+        userDto.setPassword(hashPassword);
 
         User user = UserMapper.INSTANCE.dtoToUser(userDto);
 
@@ -123,6 +134,11 @@ public class UserService {
         if(userDto.getFavorites() != null){
 
             user.setFavorites(userDto.getFavorites());
+        }
+
+        if(userDto.getPassword() != null){
+
+            user.setPassword(new BCryptPasswordEncoder().encode(userDto.getPassword()));
         }
 
         this.producerService.sendMessageLogService("Update User with Id " + user.getId(), "45fbf752-1e87-4086-93d3-44e637c26a96");
