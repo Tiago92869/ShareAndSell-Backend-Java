@@ -35,4 +35,7 @@ public class UserDto {
     private Boolean isEnable;
 
     private List<UUID> favorites;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
 }
