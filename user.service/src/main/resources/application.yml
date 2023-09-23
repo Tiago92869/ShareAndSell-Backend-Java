@@ -31,3 +31,7 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     enable: true
+
+jwt:
+  secret: shareandsell
+  expiration: 1800000
