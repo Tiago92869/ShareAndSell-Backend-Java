@@ -173,4 +173,10 @@ public class UserService {
         this.producerService.sendMessageLogService("Remove ShopId from favorites with the shopId " + shopId, "45fbf752-1e87-4086-93d3-44e637c26a96");
         this.userRepository.saveAll(userList);
     }
+
+    public Boolean checkPassword(User user, String password){
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return passwordEncoder.matches(password, user.getPassword());
+    }
 }

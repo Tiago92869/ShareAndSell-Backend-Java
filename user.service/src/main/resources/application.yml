@@ -33,5 +33,7 @@ springdoc:
     enable: true
 
 jwt:
-  secret: shareandsell
-  expiration: 1800000
+  secret: FCKhgybAPAJRjdcassjhYSHFOVhdfoHFhfsapsdbnfvapidjfacJFGOHOHAKLJalojsnfJSLJDFNLKjnkajdnfNJDFPAKJFPSKAJpkjp
+  expiration:
+    access: 900000
+    refresh: 604800000
